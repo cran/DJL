@@ -1,0 +1,95 @@
+\name{roc.dea}
+\alias{roc.dea}
+\title{Rate of change (RoC) calculation using DEA}
+\description{Employs \code{dm.dea} over time to calculate RoCs.}
+\usage{roc.dea(xdata, ydata, date, t, rts, orientation,
+        sg="ssm", ftype="d", ncv=NULL, env=NULL)}
+\arguments{
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
+  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{t}{A vantage point from which the RoC is captured}
+  \item{rts}{Returns to scale assumption \cr
+    \code{"crs"  }{Constant RTS} \cr  
+    \code{"vrs"  }{Variable RTS} \cr
+    \code{"irs"  }{Increasing RTS} \cr
+    \code{"drs"  }{Decreasing RTS}
+  }
+  \item{orientation}{Orientation of the measurement \cr
+    \code{"i"  }{Input-orientation} \cr
+    \code{"o"  }{Output-orientation}
+  }
+  \item{sg}{Employs second-stage optimization \cr
+    \code{"ssm"  }{Slack-sum maximization (default)} \cr
+    \code{"max"  }{Date-sum maximization} \cr
+    \code{"min"  }{Date-sum maximization}
+  }
+  \item{ftype}{Frontier type \cr
+    \code{"d"  }{Dynamic frontier (default)} \cr  
+    \code{"s"  }{Static frontier}
+  }
+  \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}
+  \item{env}{Environment index for external NDF (\emph{n} by \emph{1} matrix)}
+}
+\value{
+  \item{\code{$eff_r}}{Efficiency at release (i.e., at each production date)}
+  \item{\code{$eff_t}}{Efficiency at \code{t}}
+  \item{\code{$lambda_t}}{Intensity vector at \code{t}}
+  \item{\code{$eft_date}}{Effective date}
+  \item{\code{$roc_past}}{RoC observed from the obsolete DMUs in the past}
+  \item{\code{$roc_avg}}{Average RoC}
+  \item{\code{$roc_local}}{Local RoC}
+}
+\references{
+Lim, Dong-Joon, Timothy R. Anderson, and Oliver Lane Inman. "Choosing effective dates from multiple optima in Technology Forecasting using Data Envelopment Analysis (TFDEA)." \emph{Technological Forecasting and Social Change} 88 (2014): 91~97.
+
+Lim, Dong-Joon, et al. "Comparing technological advancement of hybrid electric vehicles (HEV) in different market segments." \emph{Technological Forecasting and Social Change} 97 (2015): 140~153.
+
+Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles (HEVs). Handbook of Operations Analytics Using Data Envelopment Analysis. \emph{Springer (forthcoming)}, 2016.
+}
+\author{Dong-Joon Lim, PhD}
+\seealso{
+  \code{\link{dm.dea}} Distance measure using DEA \cr
+  \code{\link{roc.dea}} RoC calculation using DEA \cr
+  \code{\link{target.arrival.dea}} Arrival target setting using DEA \cr
+  \code{\link{target.spec.dea}} Spec target setting using DEA
+}
+\examples{
+# Reproduce Table 3 in Lim, D-J. et al.(2014)
+  # ready
+  x<-matrix(c(1),nrow=28,ncol=1)
+  y<-matrix(c(9.205, 9.62, 9.8, 12.7, 10.01, 9.265, 10.2, 12.4, 12.2, 11.065, 13.45,
+              12.27, 10.5, 15, 13.7, 13.408, 14.305, 11.12, 12.5, 14.6, 16.7, 14.685,
+              17.37, 15.2, 15.7, 14.816, 15.75, 15, 132, 159, 366, 366, 250, 250,
+              234, 412, 181, 218, 416, 293, 295, 261, 295, 293, 301, 365, 253, 380,
+              313, 365, 301, 525, 242, 467, 280, 315, 2.619, 2.812, 2.973, 3.15,
+              2.901, 2.824, 2.987, 3.245, 3.192, 3.28, 3.251, 3.203, 3.462, 3.229,
+              3.308, 3.216, 3.225, 3.166, 3.124, 3.344, 3.192, 3.387, 3.362, 3.205,
+              3.399, 3.349, 3.55, 3.549, 870, 870, 893, 893, 870, 870, 892, 902, 849,
+              849, 902, 870, 870, 870, 870, 870, 892, 892, 870, 881, 881, 892, 892,
+              902, 902, 908, 902, 902, 933, 965, 945, 945, 934, 934, 955, 945, 913,
+              913, 977, 934, 913, 913, 913, 934, 945, 945, 913, 913, 913, 945, 945,
+              945, 945, 977, 945, 945), ncol=5)
+  d<-matrix(c(1965, 1966, 1969, 1971, 1972, 1973, 1979, 1983, 1984, 1988, 1989, 1990,
+              1993, 1993, 1993, 1996, 1997, 1998, 1998, 2002, 2003, 2004, 2006, 2007,
+              2010, 2011, 2013, 2013),ncol=1)
+  # go
+  roc.dea(x,y,d,2007,"vrs","o","min","d")$roc_past
+
+# Reproduce Table 3 in Lim, D-J. et al.(2015)
+  # Load hev dataset
+  data(dataset.hev.2013)
+  
+  # ready
+  d<-matrix(as.numeric(dataset.hev.2013[,2]),ncol=1)
+  x<-matrix(as.numeric(dataset.hev.2013[,3]),ncol=1)
+  y<-matrix(as.numeric(dataset.hev.2013[,4:6]),ncol=3)
+  c<-matrix(as.numeric(dataset.hev.2013[,7]),ncol=1)
+  
+  # go
+  results<-roc.dea(x,y,d,2013,"vrs","o","min","d",env=c)
+  hev<-which(results$roc_local>0)
+  cbind(hev,results$roc_local[hev,])[order(c[hev,]),]
+  # NOTE: the published results include a typo on roc_local[82,]
+  #       this will be corrected in forthcoming book chapter(Lim, D-J. et al., 2016).
+}

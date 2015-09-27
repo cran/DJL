@@ -1,0 +1,14 @@
+import(lpSolveAPI)
+importFrom("stats","na.omit")
+export(dm.ddf,
+       dm.dea,
+       dm.sbm,
+       dm.sf,
+       map.soa.ddf,
+       map.soa.dea,
+       map.soa.sbm,
+       map.soa.sf,
+       roc.dea,
+       target.arrival.dea,
+       target.spec.dea
+       )
