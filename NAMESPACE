@@ -9,6 +9,7 @@ export(dm.ddf,
        map.soa.sbm,
        map.soa.sf,
        roc.dea,
+       roc.sf,
        target.arrival.dea,
        target.spec.dea
        )

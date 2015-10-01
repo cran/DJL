@@ -28,10 +28,10 @@
 \value{
   \item{\code{$eff}}{Efficiency score}
   \item{\code{$lambda}}{Intensity vector}
-  \item{\code{$xslack}}{Input slack(s)}
-  \item{\code{$yslack}}{Output slack(s)}
-  \item{\code{$xtarget}}{Input target(s)}
-  \item{\code{$ytarget}}{Output target(s)}
+  \item{\code{$xslack}}{Input slack}
+  \item{\code{$yslack}}{Output slack}
+  \item{\code{$xtarget}}{Input target}
+  \item{\code{$ytarget}}{Output target}
 }
 \references{
 Tone, Kaoru. "A slacks-based measure of efficiency in data envelopment analysis." \emph{European journal of operational research} 130.3 (2001): 498~509.

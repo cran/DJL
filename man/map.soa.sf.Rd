@@ -2,7 +2,7 @@
 \alias{map.soa.sf}
 \title{Generate SOA map using SF}
 \description{Employs \code{dm.sf} over time to generate a state-of-the-art map.}
-\usage{map.soa.sf(xdata, ydata, date, rts, g, w=0, sg="ssm")}
+\usage{map.soa.sf(xdata, ydata, date, rts, g, w=NULL, sg="ssm", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -20,6 +20,13 @@
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum maximization (only if \code{date} is defined)}
   }
+  \item{mk}{Marker on the map \cr
+    \code{"dmu"  }{DMU indices (default)} \cr
+    \code{"eff"  }{Efficiency changes } 
+  }
+}
+\references{
+D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-charged, \emph{working paper} (2015).
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
@@ -29,18 +36,24 @@
   \code{\link{map.soa.sf}} SOA map using SF \cr
 }
 \examples{
-# Load engine dataset
-  data(dataset.engine.2015)
+# Reproduce Table 2 in Lim, D-J. (2015)
+  # Load engine dataset
+    data(dataset.engine.2015)
+  
+  # Parameters
+    c<-matrix(as.numeric(dataset.engine.2015[,3]),ncol=1)
+    x<-matrix(as.numeric(dataset.engine.2015[,4]),ncol=1)
+    y<-matrix(as.numeric(dataset.engine.2015[,5:7]),ncol=3)
+    d<-matrix(as.numeric(dataset.engine.2015[,2]),ncol=1)
+    g<-matrix(c(rep(0,nrow(x)),y),nrow=nrow(x),ncol=4)
+    w<-matrix(c(1,0,0),ncol=3)
 
-# Subset for forced induction systems
-  fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
+  # Subset for 4 cylinder engines
+    x_s<-subset(x,c==4)
+    y_s<-subset(y,c==4)
+    d_s<-subset(d,c==4)
+    g_s<-subset(g,c==4)
 
-# Say, efficiency is defined as (HP & Torque)/Displacement
-  x<-matrix(as.numeric(fis[,4]),ncol=1)
-  y<-matrix(as.numeric(fis[,6:7]),ncol=2)
-  d<-matrix(as.numeric(fis[,2]),ncol=1)
-  g<-matrix(c(x,y),nrow=nrow(x),ncol=3)
-
-# generate an SOA map
-  map.soa.sf(x,y,d,"crs",g)
+  # Generate an SOA map
+    map.soa.sf(x_s,y_s,d_s,"crs",g_s,w,mk="eff")
 }

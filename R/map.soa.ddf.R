@@ -1,5 +1,5 @@
 map.soa.ddf <-
-function(xdata,ydata,date,rts,g,w=0,sg="ssm"){
+function(xdata,ydata,date,rts,g,w=NULL,sg="ssm",mk="dmu"){
   # Subset index
   till<-function(x,y){
     t<-0
@@ -9,11 +9,14 @@ function(xdata,ydata,date,rts,g,w=0,sg="ssm"){
   
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
+  o<-matrix(c(1:n),ncol=1) # original data order
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m)
   y<-matrix(c(ydata[order(date),]),ncol=s)
   d<-matrix(c(date[order(date),]),ncol=1)
+  g<-matrix(c(g[order(date),]),ncol=m+s)
+  o<-matrix(c(o[order(date),]),ncol=1)
   
   # max map size
   c<-nrow(unique(d)) 
@@ -28,31 +31,41 @@ function(xdata,ydata,date,rts,g,w=0,sg="ssm"){
     e<-till(d,ud[i])
     x_s<-matrix(x[1:e,],nrow=e)
     y_s<-matrix(y[1:e,],nrow=e)
+    g_s<-matrix(g[1:e,],nrow=e)
     
     # run distance measure
-    dj<-dm.ddf(x_s,y_s,rts,g,w=0,se=0,sg="ssm")
+    dj<-dm.ddf(x_s,y_s,rts,g_s,w,se=0,sg)
     
     # soa set
     soa<-which(round(dj$eff,8)==0) 
     
     # fill the map
-    j<-sum(soa>0)
-    q<-1
-    for(k in 1:j){
-      if(ud[i]==ud[1]){fanta[k,1]<-soa[k]}
-      else{
-        l<-which(fanta[,i-1]==soa[k])
-        if(length(l)>0){fanta[l,i]<-soa[k]}
+    if(mk=="dmu"){
+      j<-sum(soa>0)
+      q<-1
+      for(k in 1:j){
+        if(ud[i]==ud[1]){fanta[k,1]<-o[soa[k],]}
         else{
-          p<-n
-          while(is.na(fanta[p,i-1])){p<-p-1}
-          fanta[p+q,i]<-soa[k]
-          q<-q+1
+          l<-which(fanta[,i-1]==o[soa[k],])
+          if(length(l)>0){fanta[l,i]<-o[soa[k],]}
+          else{
+            p<-n
+            while(is.na(fanta[p,i-1])){p<-p-1}
+            fanta[p+q,i]<-o[soa[k],]
+            q<-q+1
+          }
         }
       }
     }
+    if(mk=="eff"){
+      if(i==1){gsoa<-NULL}
+      gsoa<-union(gsoa,soa);l<-length(gsoa)
+      fanta[1:l,i]<-dj$eff[gsoa,]
+    }
   }
-  fanta<-fanta[1:(p+q-1),]
-  rownames(fanta)<-na.omit(unique(c(fanta)))
+  p<-n;while(is.na(fanta[p,i])){p<-p-1}
+  fanta<-fanta[1:p,]
+  if(mk=="dmu"){rownames(fanta)<-na.omit(unique(c(fanta)))}
+  if(mk=="eff"){rownames(fanta)<-c(o[gsoa,])}
   print(fanta)
 }

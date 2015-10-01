@@ -2,7 +2,7 @@
 \alias{map.soa.ddf}
 \title{Generate SOA map using DDF}
 \description{Employs \code{dm.ddf} over time to generate a state-of-the-art map.}
-\usage{map.soa.ddf(xdata, ydata, date, rts, g, w=0, sg="ssm")}
+\usage{map.soa.ddf(xdata, ydata, date, rts, g, w=NULL, sg="ssm", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -20,6 +20,10 @@
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum maximization (only if \code{date} is defined)}
   }
+  \item{mk}{Marker on the map \cr
+    \code{"dmu"  }{DMU indices (default)} \cr
+    \code{"eff"  }{Efficiency changes } 
+  }
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
@@ -35,12 +39,12 @@
 # Subset for forced induction systems
   fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
 
-# Say, efficiency is defined as (HP & Torque)/Displacement
+# Parameters
   x<-matrix(as.numeric(fis[,4]),ncol=1)
   y<-matrix(as.numeric(fis[,6:7]),ncol=2)
   d<-matrix(as.numeric(fis[,2]),ncol=1)
   g<-matrix(c(1),nrow=nrow(x),ncol=3)
 
-# generate an SOA map
+# Generate an SOA map
   map.soa.ddf(x,y,d,"crs",g)
 }

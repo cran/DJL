@@ -1,7 +1,7 @@
 \name{dm.dea}
 \alias{dm.dea}
 \title{Distance measure using DEA}
-\description{Implements \emph{data envelopment analysis} (radial & oriented measure).}
+\description{Implements \emph{Charnes & Cooper}'s data envelopment analysis (radial & oriented measure).}
 \usage{dm.dea(xdata, ydata, rts, orientation,
        se=0, sg="ssm", date=NULL, ncv=NULL, env=NULL)}
 \arguments{
@@ -30,8 +30,8 @@
 \value{
   \item{\code{$eff}}{Efficiency score}
   \item{\code{$lambda}}{Intensity vector}
-  \item{\code{$xslack}}{Input slack(s)}
-  \item{\code{$yslack}}{Output slack(s)}
+  \item{\code{$xslack}}{Input slack}
+  \item{\code{$yslack}}{Output slack}
   \item{\code{$vx}}{Input (dual) weight}
   \item{\code{$uy}}{Output (dual) weight}
   \item{\code{$w}}{Free (dual) variable}
@@ -60,6 +60,7 @@ Fried, Harold O., CA Knox Lovell, and Shelton S. Schmidt, eds. The measurement o
   x<-matrix(c(8,6,3,10,6,8,8,4,8,4.6,1.9,9,3.6,3.6,9,1.9),ncol=2)
   y<-matrix(c(8,5,2,9,4.5,4.5,7,2),ncol=1)
   c<-matrix(c(0,1,0),nrow=1)
+  
   # go
   dm.dea(x,y,"crs","i")$eff
   dm.dea(x,y,"vrs","i")$eff

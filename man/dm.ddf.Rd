@@ -2,7 +2,7 @@
 \alias{dm.ddf}
 \title{Distance measure using DDF}
 \description{Implements \emph{Chambers}' directional distance function (non-radial & non-oriented measure).}
-\usage{dm.ddf(xdata, ydata, rts, g, w=0, se=0, sg="ssm", date=NULL)}
+\usage{dm.ddf(xdata, ydata, rts, g, w=NULL, se=0, sg="ssm", date=NULL)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -28,8 +28,8 @@
   \item{\code{$mu}}{Secondary intensity vector for weak disposability under VRS}
   \item{\code{$beta}}{Input reduction factor}
   \item{\code{$gamma}}{Output augmentation factor}
-  \item{\code{$xslack}}{Input slack(s)}
-  \item{\code{$yslack}}{Output slack(s)}
+  \item{\code{$xslack}}{Input slack}
+  \item{\code{$yslack}}{Output slack}
 }
 \references{
 Chambers, Robert G., Yangho Chung, and Rolf Fare. "Profit, directional distance functions, and Nerlovian efficiency." \emph{Journal of optimization theory and applications} 98.2 (1998): 351~364.
@@ -49,14 +49,13 @@ Fare, Rolf, and Shawna Grosskopf. "Directional distance functions and slacks-bas
   x<-matrix(c(5,1,4),ncol=1)
   y<-matrix(c(8,3,5,6,4,1),ncol=2)
   g<-matrix(c(1),nrow=3,ncol=3) 
-  w<-matrix(c(1),nrow=1)
+  w<-matrix(c(1,0),ncol=2)
   # go
   dm.ddf(x,y,"crs",g,w)
 
-# Ratio form directional distance function
+# Multiplicative form directional distance function
   # ready
   g<-matrix(c(x,y),nrow=3,ncol=3)
-  w<-matrix(c(1),nrow=1)
   # go
   dm.ddf(x,y,"crs",g,w)
 }

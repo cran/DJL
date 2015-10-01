@@ -28,7 +28,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   r<-till(unique(d),t)
   
   # DEA internal function
-  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL,a,z){
+  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,ncv,env,a,z){
     
     # Load library
     # library(lpSolveAPI)  
@@ -131,10 +131,11 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
     e<-till(d,unique(d)[i])
     x_t<-matrix(x[1:e,],nrow=e)
     y_t<-matrix(y[1:e,],nrow=e)
+    d_t<-matrix(d[1:e,],nrow=e)
     
     # Run DEA
-    if(i==r){temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d,ncv=ncv,env=env,1,e)}
-    else{temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d,ncv=ncv,env=env,s,e)}
+    if(i==r){temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,1,e)}
+    else{temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,s,e)}
     
     # Save eff_r & eff_t
     if(i==r){eff_r[s:e,]<-temp$eff[s:e,];eff_t[1:e,]<-temp$eff[1:e,];lambda[1:e,1:e]<-temp$lambda[1:e,1:e]}

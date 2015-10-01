@@ -1,11 +1,12 @@
 dm.ddf <-
-function(xdata,ydata,rts,g,w=0,se=0,sg="ssm",date=NULL){
+function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
   
   # Load library
   # library(lpSolveAPI)
   
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
+  if(is.null(w)){w<-matrix(c(0),ncol=s)}
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)
@@ -37,8 +38,8 @@ function(xdata,ydata,rts,g,w=0,se=0,sg="ssm",date=NULL){
     
     # Output constraints
     for(r in 1:s){
-      if(sum(r==w)){
-        add.constraint(lp.ddf,c(ydata[,r],-g[k,m+r]),indices=c(1:n,n+n+m+r),"=",ydata[k,r])
+      if(w[1,r]==1){
+        add.constraint(lp.ddf,c(ydata[,r],g[k,m+r]),indices=c(1:n,n+n+m+r),"=",ydata[k,r])
         add.constraint(lp.ddf,c(1),indices=c(n+n+m+s+m+r),"=",0)
       }else{add.constraint(lp.ddf,c(ydata[,r],-g[k,m+r],-1),indices=c(1:n,n+n+m+r,n+n+m+s+m+r),"=",ydata[k,r])}
       if(se==1){add.constraint(lp.ddf,c(ydata[,r],-1),indices=c(1:n,n+n+m+s+m+r),">=",0)}

@@ -2,7 +2,8 @@
 \alias{map.soa.dea}
 \title{Generate SOA map using DEA}
 \description{Employs \code{dm.dea} over time to generate a state-of-the-art map.}
-\usage{map.soa.dea(xdata, ydata, date, rts, orientation, sg="ssm", ncv=NULL, env=NULL)}
+\usage{map.soa.dea(xdata, ydata, date, rts, orientation,
+            sg="ssm", ncv=NULL, env=NULL, mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -24,6 +25,10 @@
   }
   \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}
   \item{env}{Environment index for external NDF (\emph{n} by \emph{1} matrix)}
+  \item{mk}{Marker on the map \cr
+    \code{"dmu"  }{DMU indices (default)} \cr
+    \code{"eff"  }{Efficiency changes } 
+  }
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
@@ -39,11 +44,11 @@
 # Subset for forced induction systems
   fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
 
-# Say, efficiency is defined as (HP & Torque)/Displacement
+# Parameters
   d<-matrix(as.numeric(fis[,2]),ncol=1)
   x<-matrix(as.numeric(fis[,4]),ncol=1)
   y<-matrix(as.numeric(fis[,6:7]),ncol=2)
 
-# generate an SOA map
+# Generate an SOA map
   map.soa.dea(x,y,d,"crs","o")
 }

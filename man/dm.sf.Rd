@@ -2,7 +2,7 @@
 \alias{dm.sf}
 \title{Distance measure using SF}
 \description{Implements \emph{Luenberger}'s shortage function (radial & non-oriented measure).}
-\usage{dm.sf(xdata, ydata, rts, g, w=0, se=0, sg="ssm", date=NULL)}
+\usage{dm.sf(xdata, ydata, rts, g, w=NULL, se=0, sg="ssm", date=NULL)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -26,8 +26,8 @@
   \item{\code{$eff}}{Efficiency score}
   \item{\code{$lambda}}{Intensity vector}
   \item{\code{$mu}}{Secondary intensity vector for weak disposability under VRS}
-  \item{\code{$xslack}}{Input slack(s)}
-  \item{\code{$yslack}}{Output slack(s)}
+  \item{\code{$xslack}}{Input slack}
+  \item{\code{$yslack}}{Output slack}
 }
 \references{
 Luenberger, David G. "Benefit functions and duality." \emph{Journal of mathematical economics} 21.5 (1992): 461~481.
@@ -47,14 +47,13 @@ Chambers, Robert G., Yangho Chung, and Rolf Fare. "Profit, directional distance 
   x<-matrix(c(5,1,4),ncol=1)
   y<-matrix(c(8,3,5,6,4,1),ncol=2)
   g<-matrix(c(1),nrow=3,ncol=3) 
-  w<-matrix(c(1),nrow=1)
+  w<-matrix(c(1,0),ncol=2)
   # go
   dm.sf(x,y,"crs",g,w)
 
 # Ratio form shortage function
   # ready
   g<-matrix(c(x,y),nrow=3,ncol=3)
-  w<-matrix(c(1),nrow=1)
   # go
   dm.sf(x,y,"crs",g,w)
 }
