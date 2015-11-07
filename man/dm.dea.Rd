@@ -21,7 +21,7 @@
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
-    \code{"min"  }{Date-sum maximization (only if \code{date} is defined)}
+    \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
   \item{date}{Production date (\emph{n} by \emph{1} matrix)}
   \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}

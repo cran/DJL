@@ -19,7 +19,7 @@
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
-    \code{"min"  }{Date-sum maximization}
+    \code{"min"  }{Date-sum minimization}
   }
   \item{ftype}{Frontier type \cr
     \code{"d"  }{Dynamic frontier (default)} \cr  

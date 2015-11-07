@@ -11,7 +11,7 @@
   \code{[,5] CO2           }{CO2 emission in gram/mile} \cr
   \code{[,6] Power         }{Engine power in HP} \cr
   \code{[,7] Torque        }{Engine torque in lb.ft} \cr
-  \code{[,8] Type          }{Engine system and fuel types}
+  \code{[,8] Type          }{Engine system and fuel type}
 }
 \usage{data(dataset.engine.2015)}
 \source{http://www.fueleconomy.gov \cr http://www.autoevolution.com}

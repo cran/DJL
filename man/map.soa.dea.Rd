@@ -21,13 +21,13 @@
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
-    \code{"min"  }{Date-sum maximization (only if \code{date} is defined)}
+    \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
   \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}
   \item{env}{Environment index for external NDF (\emph{n} by \emph{1} matrix)}
   \item{mk}{Marker on the map \cr
-    \code{"dmu"  }{DMU indices (default)} \cr
-    \code{"eff"  }{Efficiency changes } 
+    \code{"dmu"  }{DMU index (default)} \cr
+    \code{"eff"  }{Efficiency score } 
   }
 }
 \author{Dong-Joon Lim, PhD}

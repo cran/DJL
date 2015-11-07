@@ -29,7 +29,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   x_t<-matrix(x[1:e,],nrow=e)
   y_t<-matrix(y[1:e,],nrow=e)
   
-  # DEA internal function
+  # DEA internal function 
   dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,a,z){
     
     # Load library
@@ -109,7 +109,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
     list(eff=results.efficiency,lambda=results.lambda,xslack=results.xslack,yslack=results.yslack)
   }
   
-  # Loop for eff_f
+  # Loop for eff_t
   for(i in (e+1):n){
     # Subset till t + each target
     x_f<-rbind(x_t,x[i,])
@@ -126,22 +126,25 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   if(ftype=="s"){ed[,1]<-t}
   
   # Calc iRoC
-  roc<-roc.dea(xdata,ydata,date,t,ftype,rts,orientation,sg)
-  for(i in (e+1):n){roc_ind[i,1]<-sum(roc$roc_local[1:e,]*lambda[i,1:e],na.rm=TRUE)/sum(lambda[i,1:e])}
+  roc<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
+  roc_local<-roc$roc_local;roc_local_bi<-ifelse(is.na(roc_local),0,1);roc_avg<-roc$roc_avg
+  for(i in (e+1):n){roc_ind[i,1]<-sum(roc_local[1:e,]*lambda[i,1:e],na.rm=TRUE)/sum(lambda[i,1:e]*roc_local_bi[1:e,])}
 
   # Arrival target
   for(i in (e+1):n){
     if(abs(eff_t[i,1]-1)>10^-9 && abs(eff_t[i,1])!=Inf){
       if(orientation=="i"){
-        arrival_avg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc$roc_avg,exp(1))
-        arrival_seg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
+        arrival_avg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc_avg,exp(1))
+        arrival_seg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
+        #arrival_seg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
       }
       if(orientation=="o"){
-        arrival_avg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc$roc_avg,exp(1))
-        arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
+        arrival_avg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_avg,exp(1))
+        arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
+        #arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
       }
     }
   }
-  results<-list(eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_ind=roc_ind,arrival_avg=arrival_avg,arrival_seg=arrival_seg)
+  results<-list(eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_avg=roc_avg,roc_local=roc_local,roc_ind=roc_ind,arrival_avg=arrival_avg,arrival_seg=arrival_seg)
   return(results)    
 }

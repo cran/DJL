@@ -1,0 +1,38 @@
+===================================================================================
+DJL v1.6 (Release date: 2015-11-06)
+===================================================================================
+
+Dataset>
+1. dataset.airplane.2017 added
+
+Code>
+1. dm.sf: weak disposability output constraint bug(missing gamma) fixed
+2. roc.dea: no c but mean to calc avgroc
+3. roc.sf: no c but mean to calc avgroc / geometric mean is used for equi-ratio
+4. target.arrival.dea: calc iroc-ftype after sg / returns roc_avg and roc_local
+5. target.arrival.sf added
+
+Man>
+1. dataset.hev.2013: ~MY2013
+2. dm.sbm: 3rd example, margin
+3. dm.sf: ratio->multiplicative form
+4. target.spec.dea: than->over
+5. typo: min - Date-sum max->min
+6. map.soa: indices->index, changes->score
+
+
+===================================================================================
+DJL v1.5 (Release date: 2015-10-01)
+===================================================================================
+
+Code>
+1. dm.ddf: default value of w to be NULL / if(w[1,r]==1 / uo - to +
+2. dm.sf: default value of w to be NULL / if(w[1,r]==1 / uo - to +
+3. map.soa.ddf: ordering / w is not set to 0 / crop map till p / mk option added
+4. map.soa.dea: ordering / sg is not set to ssm / crop map till p / mk option added
+5. map.soa.sbm: ordering / sg is not set to ssm / crop map till p / mk option added
+6. map.soa.sf: ordering / w is not set to 0 / crop map till p / mk option added
+
+Man>
+1. dm.ddf: g as n*(m+s) in example
+2. dm.sf: g as n*(m+s) in example

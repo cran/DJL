@@ -21,7 +21,7 @@
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
-    \code{"min"  }{Date-sum maximization (only if \code{date} is defined)}
+    \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
   \item{date}{Production date (\emph{n} by \emph{1} matrix)}
 }
@@ -63,7 +63,8 @@ Tone, Kaoru. "A slacks-based measure of super-efficiency in data envelopment ana
 
 # Reproduce Table 4 in Tone.(2002)
   # ready
-  x<-matrix(c(80,65,83,40,52,94,600,200,400,1000,600,700,54,97,72,75,20,36,8,1,4,7,3,5),ncol=4)
+  x<-matrix(c(80,65,83,40,52,94,600,200,400,1000,600,700,54,97,72,75,20,36,8,1,4,7,3,5),
+            ncol=4)
   y<-matrix(c(90,58,60,80,72,96,5,1,7,10,8,6),ncol=2)
   # go
   dm.sbm(x,y,"crs","i",se=1)

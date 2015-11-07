@@ -37,14 +37,14 @@ function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
     # Output constraints
     for(r in 1:s){
       if(w[1,r]==1){
-        add.constraint(lp.sf,c(ydata[,r],g[k,m+r]),indices=c(1:n,n+n+1),"=",ydata[k,r])
+        add.constraint(lp.sf,c(ydata[,r],ydata[,r],g[k,m+r]),indices=c(1:n,(n+1):(n+n),n+n+1),"=",ydata[k,r])
         add.constraint(lp.sf,c(1),indices=c(n+n+1+m+r),"=",0)
       }else{add.constraint(lp.sf,c(ydata[,r],-g[k,m+r],-1),indices=c(1:n,n+n+1,n+n+1+m+r),"=",ydata[k,r])}
       if(se==1){add.constraint(lp.sf,c(ydata[,r],-1),indices=c(1:n,n+n+1+m+r),">=",0)}
     }
     
     # PPS for Super
-    if(se==1){add.constraint(lp.sf,c(1),indices=c(k),"=",0)}
+    if(se==1){add.constraint(lp.sf,c(1,1),indices=c(k,n+k),"=",0)}
     
     # Bounds
     set.bounds(lp.sf,lower=c(rep(0,n+n),-Inf,rep(0,m+s)))  

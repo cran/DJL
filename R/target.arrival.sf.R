@@ -1,4 +1,4 @@
-roc.sf <-
+target.arrival.sf <-
 function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
@@ -13,14 +13,14 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
   o<-matrix(c(o[order(date),]),ncol=1)
   
   # Data frames
-  eff_r<-array(NA,c(n,1))
   eff_t<-array(NA,c(n,1))
   eff_t_gm<-array(NA,c(n,1)) # Geometric mean for equi-ratio
   lambda<-array(NA,c(n,n))
   ed<-array(NA,c(n,1))
   sl<-array(NA,c(n,1))
-  roc<-array(NA,c(n,1))
-  local_roc<-array(NA,c(n,1))
+  roc_ind<-array(NA,c(n,1))
+  arrival_avg<-array(NA,c(n,1))
+  arrival_seg<-array(NA,c(n,1))
   
   # Subset index
   till<-function(x,y){
@@ -28,7 +28,12 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
     while(x[t+1]<=y&&t<nrow(x)){t<-t+1}
     return(t)
   }
-  r<-till(unique(d),t)
+
+  #Subset till t
+  e<-till(d,t)
+  x_t<-matrix(x[1:e,],nrow=e)
+  y_t<-matrix(y[1:e,],nrow=e)
+  g_t<-matrix(g[1:e,],nrow=e)
   
   # SF internal function 
   dm.sf.internal<-function(xdata,ydata,rts,g,w,se=0,sg,date,a,z){
@@ -86,7 +91,7 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
       
       # Get results
       results.efficiency[k]<--1*get.objective(lp.sf)
-
+      
       # Get results
       temp.p<-get.variables(lp.sf)
       results.lambda[k,]<-temp.p[1:n]
@@ -119,61 +124,38 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
     }
     list(eff=results.efficiency,lambda=results.lambda,mu=results.mu,xslack=results.xslack,yslack=results.yslack)
   }
-
-  # Loop for eff_r & eff_t
-  for(i in 1:r){
-    # Subset indices for each unique year
-    if(i==1){s<-1}else{s<-till(d,unique(d)[i-1])+1}
-    e<-till(d,unique(d)[i])
-    x_t<-matrix(x[1:e,],nrow=e)
-    y_t<-matrix(y[1:e,],nrow=e)
-    d_t<-matrix(d[1:e,],nrow=e)
-    g_t<-matrix(g[1:e,],nrow=e)
-    
-    # Run SF
-    if(i==r){temp<-dm.sf.internal(x_t,y_t,rts,g_t,w,0,sg,d_t,1,e)}
-    else{temp<-dm.sf.internal(x_t,y_t,rts,g_t,w,0,sg,d_t,s,e)}
-    
-    # Save eff_r & eff_t
-    if(i==r){eff_r[s:e,]<-temp$eff[s:e,];eff_t[1:e,]<-temp$eff[1:e,];lambda[1:e,1:e]<-temp$lambda[1:e,1:e]}
-    else{eff_r[s:e,]<-temp$eff[s:e,]}
-  }
   
-  # Effective date
-  if(ftype=="d"){
-    for(i in 1:e){ed[i,1]<-sum(d[1:e,]*lambda[i,1:e]);sl[i,1]<-sum(lambda[i,1:e])}
-    ed<-ed/sl
+  # Loop for eff_t
+  for(i in (e+1):n){
+    # Subset till t + each target
+    x_f<-rbind(x_t,x[i,])
+    y_f<-rbind(y_t,y[i,])
+    g_f<-rbind(g_t,g[i,])
+    # Run SF
+    temp<-dm.sf.internal(x_f,y_f,rts,g_f,w,se=1,sg,d,e+1,e+1)
+    # Save eff_t
+    eff_t[i,]<-temp$eff[e+1,]
+    lambda[i,1:e]<-temp$lambda[e+1,1:e]
   }
-  if(ftype=="s"){ed[,1]<-t}
 
-  # RoC
-  for(i in 1:e){
-    if(round(eff_r[i,1],8)==0 && round(eff_t[i,1],8)!=0 && ed[i,1]>d[i,1]){
-      eff_t_gm[i,1]<-((1+eff_t[i,1])/(1-eff_t[i,1]))^0.5 # Geometric mean for equi-ratio
-      roc[i,1]<-(eff_t_gm[i,1])^(1/(ed[i,1]-d[i,1]))
+  # Effective date
+  if(ftype=="d"){for(i in (e+1):n){ed[i,1]<-sum(d[1:e,]*lambda[i,1:e])/sum(lambda[i,1:e])}}
+  if(ftype=="s"){ed[,1]<-t}
+  
+  # Calc iRoC
+  roc<-roc.sf(xdata,ydata,date,t,rts,g,w,sg,ftype)
+  roc_local<-roc$roc_local;roc_local_bi<-ifelse(is.na(roc_local),0,1);roc_avg<-roc$roc_avg
+  for(i in (e+1):n){roc_ind[i,1]<-sum(roc_local[1:e,]*lambda[i,1:e],na.rm=TRUE)/sum(lambda[i,1:e]*roc_local_bi[1:e,])}
+
+  # Arrival target
+  for(i in (e+1):n){
+    if(abs(eff_t[i,1])>10^-9 && abs(eff_t[i,1])!=Inf && eff_t[i,1]<0){
+      eff_t_gm[i,1]<-((1-eff_t[i,1])/(1+eff_t[i,1]))^0.5 # Geometric mean for equi-ratio
+      arrival_avg[i,1]<-ed[i,1]+log(eff_t_gm[i,1],exp(1))/log(roc_avg,exp(1))
+      arrival_seg[i,1]<-ed[i,1]+log(eff_t_gm[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
+      #arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
     }
   }
-  
-  # RoC filter
-  roc[!is.na(roc[,1]) & roc[,1]>10,1]<-NA
-  avgroc<-mean(roc,na.rm=TRUE)
-  
-  # RoC segmentation
-  g_b<-array(0,c(n,1))
-  g_b[!is.na(roc[,1]),1]<-1
-  for(i in 1:e){
-    # if(abs(eff_t[i,1]-1)<10^-9){local_roc[i,1]<-avgroc}
-    if(sum(lambda[,i]*roc[,1],na.rm=TRUE)>0){local_roc[i,1]<-sum(lambda[,i]*roc[,1],na.rm=TRUE)/sum(lambda[,i]*g_b[,1],na.rm=TRUE)}
-  }
-  
-  # Sort results back to original order
-  eff_r<-matrix(c(eff_r[order(o),]),ncol=1)
-  eff_t<-matrix(c(eff_t[order(o),]),ncol=1)
-  lambda<-matrix(c(lambda[order(o),]),ncol=n)
-  ed<-matrix(c(ed[order(o),]),ncol=1)
-  roc<-matrix(c(roc[order(o),]),ncol=1)
-  local_roc<-matrix(c(local_roc[order(o),]),ncol=1)
-  
-  results<-list(eff_r=eff_r,eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_past=roc,roc_local=local_roc,roc_avg=avgroc)
-  return(results)
+  results<-list(eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_avg=roc_avg,roc_local=roc_local,roc_ind=roc_ind,arrival_avg=arrival_avg,arrival_seg=arrival_seg)
+  return(results)    
 }

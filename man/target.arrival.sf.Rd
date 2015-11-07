@@ -1,8 +1,8 @@
-\name{target.arrival.dea}
-\alias{target.arrival.dea}
-\title{Arrival target setting using DEA}
-\description{Employs \code{dm.dea} over time to estimate the arrival of known specifications.}
-\usage{target.arrival.dea(xdata, ydata, date, t, rts, orientation, sg="ssm", ftype="d")}
+\name{target.arrival.sf}
+\alias{target.arrival.sf}
+\title{Arrival target setting using SF}
+\description{Employs \code{dm.sf} over time to estimate the arrival of known specifications. This function is valid only when multiplicative form of directional vector is used.}
+\usage{target.arrival.sf(xdata, ydata, date, t, rts, g, w=NULL, sg="ssm", ftype="d")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -14,10 +14,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{orientation}{Orientation of the measurement \cr
-    \code{"i"  }{Input-orientation} \cr
-    \code{"o"  }{Output-orientation}
-  }
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)} matrix)}
+  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s} matrix)} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
@@ -39,27 +37,27 @@
   \item{\code{$arrival_seg}}{Estimated arrival using \code{roc_ind}}
 }
 \references{
-Lim, Dong-Joon, Timothy R. Anderson, and Oliver Lane Inman. "Choosing effective dates from multiple optima in Technology Forecasting using Data Envelopment Analysis (TFDEA)." \emph{Technological Forecasting and Social Change} 88 (2014): 91~97.
+Lim, Dong-Joon, et al. "Comparing technological advancement of hybrid electric vehicles (HEV) in different market segments." \emph{Technological Forecasting and Social Change} 97 (2015): 140~153.
 
 Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for new product scheduling: who are the competitors and how fast are they moving forward?. Advances in DEA Theory and Applications: with Examples in Forecasting Models. \emph{Wiley (forthcoming)}, 2016.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
-  \code{\link{dm.dea}} Distance measure using DEA \cr
-  \code{\link{roc.dea}} RoC calculation using DEA \cr
-  \code{\link{target.arrival.dea}} Arrival target setting using DEA \cr
-  \code{\link{target.spec.dea}} Spec target setting using DEA
+  \code{\link{dm.sf}} Distance measure using DEA \cr
+  \code{\link{roc.sf}} RoC calculation using DEA \cr
+  \code{\link{target.arrival.dea}} Arrival target setting using DEA
 }
 \examples{
-# Reproduce Table 4 in Lim, D-J., and Timothy R. Anderson.(2016)
-  # Load airplane dataset
-  data(dataset.airplane.2017)
+# Estimate arrivals of MY2013 hev models
+  # Load hev dataset
+  data(dataset.hev.2013)
   
   # ready
-  d<-matrix(as.numeric(dataset.airplane.2017[,2]),ncol=1)
-  x<-matrix(c(1),nrow=28,ncol=1)
-  y<-matrix(as.numeric(dataset.airplane.2017[,3:7]),ncol=5)
+  d<-matrix(as.numeric(dataset.hev.2013[,2]),ncol=1)
+  x<-matrix(as.numeric(dataset.hev.2013[,3]),ncol=1)
+  y<-matrix(as.numeric(dataset.hev.2013[,4:6]),ncol=3)
+  g<-matrix(c(x,y),ncol=4)
   
   # go
-  target.arrival.dea(x,y,d,2007,"vrs","o","min","d")$arrival_seg
+  target.arrival.sf(x,y,d,2012,"vrs",g)$arrival_seg
 }

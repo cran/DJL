@@ -2,7 +2,7 @@
 \alias{dataset.hev.2013}
 \docType{data}
 \title{Dataset of hybrid electric vehicles from MY1997 to MY2013.}
-\description{Hybrid electric vehicles from MY1997 to MY2015.}
+\description{Hybrid electric vehicles from MY1997 to MY2013.}
 \section{Columns}{
   \code{[,1] Name          }{Vehicle name} \cr
   \code{[,2] MY            }{Model year} \cr

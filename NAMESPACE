@@ -11,5 +11,6 @@ export(dm.ddf,
        roc.dea,
        roc.sf,
        target.arrival.dea,
+       target.arrival.sf,
        target.spec.dea
        )

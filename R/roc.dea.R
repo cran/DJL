@@ -150,17 +150,16 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   if(ftype=="s"){ed[,1]<-t}
 
   # RoC
-  c<-0
   for(i in 1:e){
     if(round(eff_r[i,1],8)==1 && round(eff_t[i,1],8)!=1 && ed[i,1]>d[i,1]){
-      if(orientation=="i"){roc[i,1]<-(1/eff_t[i,1])^(1/(ed[i,1]-d[i,1]));c<-c+1}
-      if(orientation=="o"){roc[i,1]<-(eff_t[i,1])^(1/(ed[i,1]-d[i,1]));c<-c+1}
+      if(orientation=="i"){roc[i,1]<-(1/eff_t[i,1])^(1/(ed[i,1]-d[i,1]))}
+      if(orientation=="o"){roc[i,1]<-(eff_t[i,1])^(1/(ed[i,1]-d[i,1]))}
     }
   }
   
   # RoC filter
   roc[!is.na(roc[,1]) & roc[,1]>10,1]<-NA
-  if(c==0){avgroc<-1}else{avgroc<-sum(roc,na.rm=TRUE)/c}
+  avgroc<-mean(roc,na.rm=TRUE)
   
   # RoC segmentation
   g_b<-array(0,c(n,1))

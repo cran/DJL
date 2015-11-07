@@ -24,7 +24,7 @@
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
-    \code{"min"  }{Date-sum maximization}
+    \code{"min"  }{Date-sum minimization}
   }
   \item{ftype}{Frontier type \cr
     \code{"d"  }{Dynamic frontier (default)} \cr  
@@ -63,7 +63,7 @@ Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target settin
     # to retain its current competitiveness with downsized 3.5 litre engine in 2018.
     # What might be the minimum specs to achieve this goal
     # considering the technological changes we've seen so far?
-    # Plus, the CEO wants to put more emphasis on the torque improvement than HP.
+    # Plus, the CEO wants to put more emphasis on the torque improvement over HP.
       x<-matrix(as.numeric(fis[,4]),ncol=1)
       y<-matrix(as.numeric(fis[,6:7]),ncol=2)
       d<-matrix(as.numeric(fis[,2]),ncol=1)
