@@ -56,9 +56,9 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
   data(dataset.airplane.2017)
   
   # ready
-  d<-matrix(as.numeric(dataset.airplane.2017[,2]),ncol=1)
+  d<-as.matrix(dataset.airplane.2017[,2])
   x<-matrix(c(1),nrow=28,ncol=1)
-  y<-matrix(as.numeric(dataset.airplane.2017[,3:7]),ncol=5)
+  y<-as.matrix(dataset.airplane.2017[,3:7])
   
   # go
   target.arrival.dea(x,y,d,2007,"vrs","o","min","d")$arrival_seg

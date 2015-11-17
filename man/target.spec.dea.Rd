@@ -64,12 +64,12 @@ Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target settin
     # What might be the minimum specs to achieve this goal
     # considering the technological changes we've seen so far?
     # Plus, the CEO wants to put more emphasis on the torque improvement over HP.
-      x<-matrix(as.numeric(fis[,4]),ncol=1)
-      y<-matrix(as.numeric(fis[,6:7]),ncol=2)
-      d<-matrix(as.numeric(fis[,2]),ncol=1)
-      a<-matrix(c(3.5),ncol=1)
+      d<-as.matrix(fis[,2])
+      x<-as.matrix(fis[,4])
+      y<-as.matrix(fis[,6:7])
+      a<-as.matrix(3.5)
       w<-matrix(c(0.3,0.7),ncol=2)
     
   # go
-    target.spec.dea(x,y,d,2015,3,262,alpha=a,wv=w,rts="vrs",sg="min")
+    target.spec.dea(x,y,d,2015,3,262,alpha=a,wv=w,rts="vrs",sg="min")$beta
 }

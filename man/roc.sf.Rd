@@ -50,20 +50,16 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
   # Load engine dataset
     data(dataset.engine.2015)
   
+  # Subset for 4 cylinder engines
+    fce<-subset(dataset.engine.2015,dataset.engine.2015[,3]==4)
+    
   # Parameters
-    c<-matrix(as.numeric(dataset.engine.2015[,3]),ncol=1)
-    x<-matrix(as.numeric(dataset.engine.2015[,4]),ncol=1)
-    y<-matrix(as.numeric(dataset.engine.2015[,5:7]),ncol=3)
-    d<-matrix(as.numeric(dataset.engine.2015[,2]),ncol=1)
+    d<-as.matrix(fce[,2])
+    x<-as.matrix(fce[,4])
+    y<-as.matrix(fce[,5:7])
     g<-matrix(c(rep(0,nrow(x)),y),nrow=nrow(x),ncol=4)
     w<-matrix(c(1,0,0),ncol=3)
 
-  # Subset for 4 cylinder engines
-    x_s<-subset(x,c==4)
-    y_s<-subset(y,c==4)
-    d_s<-subset(d,c==4)
-    g_s<-subset(g,c==4)
-
   # Calc local Roc
-    roc.sf(x_s,y_s,d_s,2014,"crs",g_s,w,"min")$roc_local[348,]
+    roc.sf(x,y,d,2014,"crs",g,w,"min")$roc_local[348,]
 }

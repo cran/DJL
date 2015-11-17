@@ -60,9 +60,9 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
   data(dataset.airplane.2017)
   
   # ready
-  d<-matrix(as.numeric(dataset.airplane.2017[,2]),ncol=1)
+  d<-as.matrix(dataset.airplane.2017[,2])
   x<-matrix(c(1),nrow=28,ncol=1)
-  y<-matrix(as.numeric(dataset.airplane.2017[,3:7]),ncol=5)
+  y<-as.matrix(dataset.airplane.2017[,3:7])
   
   # go
   roc.dea(x,y,d,2007,"vrs","o","min","d")$roc_past
@@ -72,10 +72,10 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
   data(dataset.hev.2013)
   
   # ready
-  d<-matrix(as.numeric(dataset.hev.2013[,2]),ncol=1)
-  x<-matrix(as.numeric(dataset.hev.2013[,3]),ncol=1)
-  y<-matrix(as.numeric(dataset.hev.2013[,4:6]),ncol=3)
-  c<-matrix(as.numeric(dataset.hev.2013[,7]),ncol=1)
+  d<-as.matrix(dataset.hev.2013[,2])
+  x<-as.matrix(dataset.hev.2013[,3])
+  y<-as.matrix(dataset.hev.2013[,4:6])
+  c<-as.matrix(dataset.hev.2013[,7])
   
   # go
   results<-roc.dea(x,y,d,2013,"vrs","o","min","d",env=c)

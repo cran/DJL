@@ -45,9 +45,9 @@
   fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
 
 # Parameters
-  d<-matrix(as.numeric(fis[,2]),ncol=1)
-  x<-matrix(as.numeric(fis[,4]),ncol=1)
-  y<-matrix(as.numeric(fis[,6:7]),ncol=2)
+  d<-as.matrix(fis[,2])
+  x<-as.matrix(fis[,4])
+  y<-as.matrix(fis[,6:7])
 
 # Generate an SOA map
   map.soa.dea(x,y,d,"crs","o")

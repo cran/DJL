@@ -6,7 +6,7 @@
 \section{Columns}{
   \code{[,1] Name          }{Vehicle name} \cr
   \code{[,2] MY            }{Model year} \cr
-  \code{[,3] MSRP_2013     }{MSRP converted to 2013 value} \cr
+  \code{[,3] MSRP.2013     }{MSRP converted to 2013 value} \cr
   \code{[,4] Acc           }{Acceleration (0-100km) in km/h/s} \cr
   \code{[,5] MPG           }{MPG in mile/gallon} \cr
   \code{[,6] MPGe          }{MPG equivalence for PHEV in mile/gallon}

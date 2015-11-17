@@ -53,9 +53,9 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
   data(dataset.hev.2013)
   
   # ready
-  d<-matrix(as.numeric(dataset.hev.2013[,2]),ncol=1)
-  x<-matrix(as.numeric(dataset.hev.2013[,3]),ncol=1)
-  y<-matrix(as.numeric(dataset.hev.2013[,4:6]),ncol=3)
+  d<-as.matrix(dataset.hev.2013[,2])
+  x<-as.matrix(dataset.hev.2013[,3])
+  y<-as.matrix(dataset.hev.2013[,4:6])
   g<-matrix(c(x,y),ncol=4)
   
   # go
