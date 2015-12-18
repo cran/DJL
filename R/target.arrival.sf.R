@@ -1,5 +1,11 @@
 target.arrival.sf <-
 function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
+  
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(w)){w<-matrix(c(0),ncol=s)}

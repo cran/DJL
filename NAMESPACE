@@ -1,6 +1,7 @@
-import(lpSolveAPI)
-importFrom("stats","na.omit")
-export(dm.ddf,
+import(car,combinat,lpSolveAPI)
+importFrom("stats","na.omit","AIC","BIC","anova","cor")
+export(aps.reg,
+       dm.ddf,
        dm.dea,
        dm.sbm,
        dm.sf,

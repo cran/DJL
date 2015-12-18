@@ -1,9 +1,21 @@
 ===================================================================================
-DJL v1.7 (Release date: 2015-11-18)
+DJL v1.8 (Release date: 2015-12-17)
+===================================================================================
+
+Code>
+1. All codes: initial checks added
+2. aps.reg: new feature (all possible subset regression) added
+
+Man>
+1. aps.reg: new feature (all possible subset regression) added
+
+
+===================================================================================
+DJL v1.7 (Release date: 2015-11-17)
 ===================================================================================
 
 Dataset>
-1. All datasets converted to data.frame for easy loading
+1. All datasets framed for easy use
 
 Man>
 1. All examples using dataset rewritten

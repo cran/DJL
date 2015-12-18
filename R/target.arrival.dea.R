@@ -1,5 +1,12 @@
 target.arrival.dea <-
 function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
+  
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   

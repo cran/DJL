@@ -1,5 +1,11 @@
 target.spec.dea <-
 function(xdata,ydata,date,t,dt,dmu,et="c",alpha=NULL,beta=NULL,wv,rts,sg="ssm",ftype="d",ncv=NULL,env=NULL){
+  
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  
   # Estimation direction
   m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(alpha) && !is.null(beta)){alpha<-matrix(rep(NA,m),nrow=1,ncol=m);orientation<-"i"}

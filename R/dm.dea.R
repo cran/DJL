@@ -1,9 +1,15 @@
 dm.dea <-
 function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
+
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
+  if(is.na(match(se,c(0,1)))){stop('se must be either 0 or 1.')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   
   # Load library
   # library(lpSolveAPI)  
-  
+
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(ncv)){ncv<-matrix(c(0),ncol=m+s)}
@@ -24,7 +30,7 @@ function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
     # Set objective
     if(orientation=="o"){set.objfn(lp.dea,c(-1),indices=c(n+1))}
     if(orientation=="i"){set.objfn(lp.dea,c(1),indices=c(n+1))}
-    
+
     # RTS
     if(rts=="vrs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),"=",1)}
     if(rts=="crs"){set.constr.type(lp.dea,0,1)}

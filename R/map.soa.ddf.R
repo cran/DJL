@@ -1,5 +1,11 @@
 map.soa.ddf <-
 function(xdata,ydata,date,rts,g,w=NULL,sg="ssm",mk="dmu"){
+
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(mk,c("dmu","eff")))){stop('mk must be either "dmu" or "eff".')}
+  
   # Subset index
   till<-function(x,y){
     t<-0

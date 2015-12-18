@@ -1,6 +1,12 @@
 dm.sbm <-
 function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
 
+  # Initial checks
+  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
+  if(is.na(match(orientation,c("n","i","o")))){stop('orientation must be "n", "i" or "o".')}
+  if(is.na(match(se,c(0,1)))){stop('se must be either 0 or 1.')}
+  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  
   # Load library
   # library(lpSolveAPI)  
   
