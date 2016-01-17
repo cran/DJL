@@ -1,4 +1,17 @@
 ===================================================================================
+DJL v1.9 (Release date: 2016-01-1?)
+===================================================================================
+
+Code>
+1. ma.aps.reg: name changed from aps.reg (sorry!) /
+               mad/aic/bic switches turned off as a default setting /
+               alias test added to cope with the singularity /
+               warning added for case of no model meeting given criteria 
+Man>
+1. target.spec.dea: description revised / reference added
+
+
+===================================================================================
 DJL v1.8 (Release date: 2015-12-17)
 ===================================================================================
 

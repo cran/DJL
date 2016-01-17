@@ -1,9 +1,9 @@
-\name{aps.reg}
-\alias{aps.reg}
+\name{ma.aps.reg}
+\alias{ma.aps.reg}
 \title{Combinatorial search (all possible subset) for regression analysis}
 \description{Implements combinatorial (exhaustive) search algorithm, aka all-possible-subsets regression. As opposed to the sequential approach (stepwise, forward addition, or backward elimination) that has a potential bias resulting from considering only one variable for selection at a time, all possible combinations of the independent variables are examined, and sets satisfying designated conditions are returned.}
-\usage{aps.reg(dv, iv, min=1, max, mad=TRUE, aic=TRUE, bic=TRUE,
-        model.sig=TRUE, coeff.sig=TRUE, coeff.vif=TRUE, coeff.cor=FALSE)}
+\usage{ma.aps.reg(dv, iv, min=1, max, mad=FALSE, aic=FALSE, bic=FALSE,
+           model.sig=TRUE, coeff.sig=TRUE, coeff.vif=TRUE, coeff.cor=FALSE)}
 \arguments{
   \item{dv}{Dependent variable (\emph{r} by \emph{1} matrix)}
   \item{iv}{Independent variable(s) (\emph{r} by \emph{c} matrix)}
@@ -28,5 +28,5 @@ dv<-dataset.airplane.2017[,2,drop=FALSE]
 iv<-dataset.airplane.2017[,3:7,drop=FALSE]
   
 # go
-aps.reg(dv,iv,1,3,coeff.cor=TRUE)
+ma.aps.reg(dv,iv,1,3,mad=TRUE,coeff.cor=TRUE)
 }

@@ -1,7 +1,7 @@
 \name{target.spec.dea}
 \alias{target.spec.dea}
 \title{Spec target setting using DEA}
-\description{Employs \code{inverse DEA} to estimate the specifications to achieve a determined efficiency.}
+\description{Employs \code{inverse DEA} to estimate specifications to achieve a predetermined efficiency.}
 \usage{target.spec.dea(xdata, ydata, date, t, dt, dmu, et="c", alpha=NULL, beta=NULL,
                 wv, rts, sg="ssm", ftype="d", ncv=NULL, env=NULL)}
 \arguments{
@@ -41,7 +41,9 @@
   \item{\code{$yslack}}{Output slack}
 }
 \references{
-Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target setting." \emph{Submitted} (2015).
+Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target setting." 
+\emph{European Journal of Operational Research} (Revised and resubmitted) (2016).
+
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
