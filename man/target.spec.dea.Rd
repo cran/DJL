@@ -2,8 +2,9 @@
 \alias{target.spec.dea}
 \title{Spec target setting using DEA}
 \description{Employs \code{inverse DEA} to estimate specifications to achieve a predetermined efficiency.}
-\usage{target.spec.dea(xdata, ydata, date, t, dt, dmu, et="c", alpha=NULL, beta=NULL,
-                wv, rts, sg="ssm", ftype="d", ncv=NULL, env=NULL)}
+\usage{target.spec.dea(xdata, ydata, date=NULL, t=NULL, dt=NULL, dmu, et="c",
+                alpha=NULL, beta=NULL, wv, rts, sg="ssm", ftype="d",
+                ncv=NULL, env=NULL)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
@@ -44,15 +45,25 @@
 Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target setting." 
 \emph{European Journal of Operational Research} (Revised and resubmitted) (2016).
 
+Wei, Quanling, Jianzhong Zhang, and Xiangsun Zhang. "An inverse DEA model for inputs/outputs estimate." \emph{European Journal of Operational Research} 121.1 (2000): 151~163.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
   \code{\link{dm.dea}} Distance measure using DEA \cr
   \code{\link{roc.dea}} RoC calculation using DEA \cr
-  \code{\link{target.arrival.dea}} Arrival target setting using DEA \cr
-  \code{\link{target.spec.dea}} Spec target setting using DEA
+  \code{\link{target.arrival.dea}} Arrival target setting using DEA
 }
 \examples{
+# Reproduce Example 2 in Wei, Q. et al.(2000)
+  # ready
+  x<-matrix(c(1,1,1),3)
+  y<-matrix(c(4,8,5,8,4,5),3)
+  a<-matrix(1.8,1)
+  w<-matrix(c(0.5,0.5),1)
+  
+  # go
+  target.spec.dea(x,y,dmu=3,alpha=a,wv=w,rts="crs")$beta
+
 # Reproduce Table 4 in Lim, D-J. (2015)
   # Load engine dataset
     data(dataset.engine.2015)
@@ -70,7 +81,7 @@ Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target settin
       x<-as.matrix(fis[,4])
       y<-as.matrix(fis[,6:7])
       a<-as.matrix(3.5)
-      w<-matrix(c(0.3,0.7),ncol=2)
+      w<-matrix(c(0.3,0.7),1)
     
   # go
     target.spec.dea(x,y,d,2015,3,262,alpha=a,wv=w,rts="vrs",sg="min")$beta

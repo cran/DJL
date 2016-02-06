@@ -6,6 +6,8 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  if(t<=min(date)){stop('t is earlier than dataset.')}
+  if(max(date)<=t){stop('t is later than dataset.')}
   
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
@@ -140,12 +142,12 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   # Arrival target
   for(i in (e+1):n){
     if(abs(eff_t[i,1]-1)>10^-9 && abs(eff_t[i,1])!=Inf){
-      if(orientation=="i"){
+      if(orientation=="i" && eff_t[i,1]>1){
         arrival_avg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc_avg,exp(1))
         arrival_seg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
         #arrival_seg[i,1]<-ed[i,1]+log(eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
       }
-      if(orientation=="o"){
+      if(orientation=="o" && eff_t[i,1]<1){
         arrival_avg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_avg,exp(1))
         arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
         #arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))

@@ -1,32 +1,52 @@
 target.spec.dea <-
-function(xdata,ydata,date,t,dt,dmu,et="c",alpha=NULL,beta=NULL,wv,rts,sg="ssm",ftype="d",ncv=NULL,env=NULL){
+function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv,rts,sg="ssm",ftype="d",ncv=NULL,env=NULL){
   
   # Initial checks
+  if(is.null(date) && sg!="ssm"){stop('sg must be "ssm" when date is null.')}
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  if(dmu>nrow(xdata)||dmu<1){stop('dmu must indicate one of data points in the set.')}
+  ifelse(is.null(date)||is.null(t)||is.null(dt),mtype<-"sidea",mtype<-"tidea")
+  if(mtype=="tidea" && t<=min(date)){stop('t is earlier than dataset.')}
+  if(mtype=="tidea" && max(date)<t){stop('t is later than dataset.')}
   
-  # Estimation direction
+  # Estimation of the orientation
   m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(alpha) && !is.null(beta)){alpha<-matrix(rep(NA,m),nrow=1,ncol=m);orientation<-"i"}
   if(!is.null(alpha) && is.null(beta)){beta<-matrix(rep(NA,s),nrow=1,ncol=s);orientation<-"o"}
+  if(orientation=="i" && ncol(as.matrix(wv))!=m){stop('wv must have the same number of column with xdata.')}
+  if(orientation=="o" && ncol(as.matrix(wv))!=s){stop('wv must have the same number of column with ydata.')}
   
-  # Calc RoCs
-  grapejelly<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
-  if(et=="c"){et<-grapejelly$eff_t[dmu,]}
-  
-  # Future SOA set
-  soa<-which(grapejelly$roc_local>0)
-  d_f<-as.matrix(date[soa,])
-  if(orientation=="i"){x_f<-as.matrix(xdata[soa,])*(1-grapejelly$roc_local[soa,]^dt);y_f<-as.matrix(ydata[soa,])}
-  if(orientation=="o"){x_f<-as.matrix(xdata[soa,]);y_f<-as.matrix(ydata[soa,])*grapejelly$roc_local[soa,]^dt}
-  if(!is.null(env)){env_f<-as.matrix(env[soa,])}
-  
-  # Experiment set
-  d_e<-rbind(d_f,date[dmu,])
-  if(orientation=="i"){x_e<-rbind(x_f,xdata[dmu,]);y_e<-rbind(y_f,beta)}
-  if(orientation=="o"){x_e<-rbind(x_f,alpha);y_e<-rbind(y_f,ydata[dmu,])}
-  if(!is.null(env)){env_e<-rbind(env_f,env[dmu,])}
+  # Construction of the PPS
+  if(mtype=="tidea"){
+    # Calc RoCs
+    grapejelly<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
+    if(et=="c"){et<-grapejelly$eff_t[dmu,]}
+    
+    # Future SOA set
+    soa<-which(grapejelly$roc_local>0)
+    d_f<-as.matrix(date[soa,])
+    if(orientation=="i"){x_f<-as.matrix(xdata[soa,])*((1/grapejelly$roc_local[soa,])^dt);y_f<-as.matrix(ydata[soa,])}
+    if(orientation=="o"){x_f<-as.matrix(xdata[soa,]);y_f<-as.matrix(ydata[soa,])*grapejelly$roc_local[soa,]^dt}
+    if(!is.null(env)){env_f<-as.matrix(env[soa,])}
+    
+    # Experiment set
+    d_e<-rbind(d_f,date[dmu,])
+    if(orientation=="i"){x_e<-rbind(x_f,xdata[dmu,]);y_e<-rbind(y_f,beta)}
+    if(orientation=="o"){x_e<-rbind(x_f,alpha);y_e<-rbind(y_f,ydata[dmu,])}
+    if(!is.null(env)){env_e<-rbind(env_f,env[dmu,])}
+  }else{
+    # Calc efficiency
+    grapejelly<-dm.dea(xdata,ydata,rts,orientation)
+    if(et=="c"){et<-grapejelly$eff[dmu,]}
+    
+    # Experiment set
+    soa<-which(round(grapejelly$eff,8)==1)
+    if(orientation=="i"){x_e<-rbind(as.matrix(xdata[soa,]),xdata[dmu,]);y_e<-rbind(as.matrix(ydata[soa,]),beta)}
+    if(orientation=="o"){x_e<-rbind(as.matrix(xdata[soa,]),alpha);y_e<-rbind(as.matrix(ydata[soa,]),ydata[dmu,])}
+    if(!is.null(env)){env_e<-rbind(as.matrix(env[soa,]),env[dmu,])}
+  }
   
   # Parameters
   n<-nrow(x_e)

@@ -1,5 +1,23 @@
 ===================================================================================
-DJL v1.9 (Release date: 2016-01-1?)
+DJL v2.0 (Release date: 2016-02-07)
+===================================================================================
+
+Code>
+1. target.spec.dea: input estimation bug fixed: 1-delta^dt -> (1/delta)^dt /
+                    procedure modified to encompass the traditional inverse DEA /
+                    initial checks added for dumb inputs
+2. target.arrival.dea: bug fixed for s.eff & infinity checks /
+                       initial checks added for dumb inputs
+3. target.arrival.sf: initial checks added for dumb inputs
+4. roc.dea: initial checks added for dumb inputs
+5. roc.sf: initial checks added for dumb inputs
+
+Man>
+1. target.spec.dea: descriptions & example added for changes made
+
+
+===================================================================================
+DJL v1.9 (Release date: 2016-01-17)
 ===================================================================================
 
 Code>

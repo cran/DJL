@@ -6,6 +6,8 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
+  if(t<=min(date)){stop('t is earlier than dataset.')}
+  if(max(date)<t){stop('t is later than dataset.')}
   
   # Parameters
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
@@ -33,7 +35,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
     return(t)
   }
   r<-till(unique(d),t)
-  
+
   # DEA internal function
   dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,ncv,env,a,z){
     

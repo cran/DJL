@@ -1,7 +1,7 @@
 Package: DJL
 Type: Package
 Title: Distance Measure Based Judgment and Learning
-Version: 1.9
+Version: 2.0
 Date: 2015-09-30
 Author: Dong-Joon Lim, PhD
 Depends: R (>= 3.2.2), car, combinat, lpSolveAPI
@@ -11,6 +11,6 @@ Description: Implements various decision support tools related to the new produc
 License: GPL-2
 LazyData: true
 NeedsCompilation: no
-Packaged: 2016-01-17 01:34:29 UTC; TGno3
+Packaged: 2016-02-05 22:40:16 UTC; DJL
 Repository: CRAN
-Date/Publication: 2016-01-17 10:59:27
+Date/Publication: 2016-02-06 11:07:38
