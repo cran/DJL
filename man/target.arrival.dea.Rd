@@ -4,9 +4,9 @@
 \description{Employs \code{dm.dea} over time to estimate the arrival of known specifications.}
 \usage{target.arrival.dea(xdata, ydata, date, t, rts, orientation, sg="ssm", ftype="d")}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
@@ -56,10 +56,10 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
   data(dataset.airplane.2017)
   
   # ready
-  d<-as.matrix(dataset.airplane.2017[,2])
-  x<-matrix(c(1),nrow=28,ncol=1)
-  y<-as.matrix(dataset.airplane.2017[,3:7])
-  
+  x<-data.frame(Flew=rep(1,28))
+  y<-subset(dataset.airplane.2017,select=3:7)
+  d<-subset(dataset.airplane.2017,select=2)
+
   # go
   target.arrival.dea(x,y,d,2007,"vrs","o","min","d")$arrival_seg
 }

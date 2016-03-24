@@ -7,16 +7,19 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
   if(dmu>nrow(xdata)||dmu<1){stop('dmu must indicate one of data points in the set.')}
-  ifelse(is.null(date)||is.null(t)||is.null(dt),mtype<-"sidea",mtype<-"tidea")
+  if(!xor(is.null(alpha),is.null(beta))){stop('Either alpha or beta must be defined.')}
+  if(is.null(date)||is.null(t)||is.null(dt)) mtype<-"sidea" else mtype<-"tidea"
   if(mtype=="tidea" && t<=min(date)){stop('t is earlier than dataset.')}
   if(mtype=="tidea" && max(date)<t){stop('t is later than dataset.')}
-  
+
   # Estimation of the orientation
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(mtype=="tidea")date<-as.matrix(date) # format input data as matrix
   m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(alpha) && !is.null(beta)){alpha<-matrix(rep(NA,m),nrow=1,ncol=m);orientation<-"i"}
   if(!is.null(alpha) && is.null(beta)){beta<-matrix(rep(NA,s),nrow=1,ncol=s);orientation<-"o"}
   if(orientation=="i" && ncol(as.matrix(wv))!=m){stop('wv must have the same number of column with xdata.')}
   if(orientation=="o" && ncol(as.matrix(wv))!=s){stop('wv must have the same number of column with ydata.')}
+  if(!is.null(env)) env<-as.matrix(env)
   
   # Construction of the PPS
   if(mtype=="tidea"){
@@ -24,7 +27,7 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
     grapejelly<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
     if(et=="c"){et<-grapejelly$eff_t[dmu,]}
     
-    # Future SOA set
+    # Future reference set
     soa<-which(grapejelly$roc_local>0)
     d_f<-as.matrix(date[soa,])
     if(orientation=="i"){x_f<-as.matrix(xdata[soa,])*((1/grapejelly$roc_local[soa,])^dt);y_f<-as.matrix(ydata[soa,])}
@@ -50,7 +53,21 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   
   # Parameters
   n<-nrow(x_e)
-  if(is.null(ncv)){ncv<-matrix(c(0),ncol=m+s)}
+  if(is.null(ncv)) ncv<-matrix(c(0),ncol=m+s) else ncv<-as.matrix(ncv)
+  
+  # Feasibility check
+  if(orientation=="i"){
+    x_l<-rbind(as.matrix(x_e[1:(n-1),]),xdata[dmu,]*et)
+    y_l<-rbind(as.matrix(y_e[1:(n-1),]),ydata[dmu,])
+    bound<-ydata[dmu,]*(dm.dea(x_l,y_l,rts,"o")$eff[n])
+    if(sum(beta>bound)>0){stop(paste0('Beta(',paste(beta,collapse=", "),') is greater than feasible bound(',paste(round(bound,4),collapse=", "),').'))}
+  }
+  if(orientation=="o"){
+    x_l<-rbind(as.matrix(x_e[1:(n-1),]),xdata[dmu,])
+    y_l<-rbind(as.matrix(y_e[1:(n-1),]),ydata[dmu,]*et)
+    bound<-xdata[dmu,]*(dm.dea(x_l,y_l,rts,"i")$eff[n])
+    if(sum(alpha<bound)>0){stop(paste0('Alpha(',paste(alpha,collapse=", "),') is smaller than feasible bound(',paste(round(bound,4),collapse=", "),').'))}
+  }
   
   # Data frames
   lambda<-matrix(rep(NA,n),nrow=1,ncol=n)

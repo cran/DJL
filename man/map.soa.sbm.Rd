@@ -4,9 +4,9 @@
 \description{Employs \code{dm.sbm} over time to generate a state-of-the-art map.}
 \usage{map.soa.sbm(xdata, ydata, date, rts, orientation="n", sg="ssm", mk="dmu")}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
     \code{"vrs"  }{Variable RTS} \cr
@@ -43,9 +43,9 @@
   fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
 
 # Parameters
-  d<-as.matrix(fis[,2])
-  x<-as.matrix(fis[,4])
-  y<-as.matrix(fis[,6:7])
+  x<-subset(fis,select=4)
+  y<-subset(fis,select=6:7)
+  d<-subset(fis,select=2)
 
 # Generate an SOA map
   map.soa.sbm(x,y,d,"crs")

@@ -1,4 +1,17 @@
 ===================================================================================
+DJL v2.1 (Release date: 2016-02-25)
+===================================================================================
+
+Code>
+1. target.spec.dea: initial checks for alpha/beta added /
+                    feasible bound check added
+
+Man>
+1. target.spec.dea: description & reference added
+2. dm.sbm: weak-pareto optimal -> alternate optima
+
+
+===================================================================================
 DJL v2.0 (Release date: 2016-02-07)
 ===================================================================================
 

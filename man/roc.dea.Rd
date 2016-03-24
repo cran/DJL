@@ -5,9 +5,9 @@
 \usage{roc.dea(xdata, ydata, date, t, rts, orientation,
         sg="ssm", ftype="d", ncv=NULL, env=NULL)}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
@@ -28,8 +28,8 @@
     \code{"d"  }{Dynamic frontier (default)} \cr  
     \code{"s"  }{Static frontier}
   }
-  \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}
-  \item{env}{Environment index for external NDF (\emph{n} by \emph{1} matrix)}
+  \item{ncv}{Non-controllable variable index(binary) for internal NDF (\emph{1} by \emph{(m+s)})}
+  \item{env}{Environment index for external NDF (\emph{n} by \emph{1})}
 }
 \value{
   \item{\code{$eff_r}}{Efficiency at release (i.e., at each production date)}
@@ -60,10 +60,10 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
   data(dataset.airplane.2017)
   
   # ready
-  d<-as.matrix(dataset.airplane.2017[,2])
-  x<-matrix(c(1),nrow=28,ncol=1)
-  y<-as.matrix(dataset.airplane.2017[,3:7])
-  
+  x<-data.frame(Flew=rep(1,28))
+  y<-subset(dataset.airplane.2017,select=3:7)
+  d<-subset(dataset.airplane.2017,select=2)
+
   # go
   roc.dea(x,y,d,2007,"vrs","o","min","d")$roc_past
 
@@ -72,15 +72,15 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
   data(dataset.hev.2013)
   
   # ready
-  d<-as.matrix(dataset.hev.2013[,2])
-  x<-as.matrix(dataset.hev.2013[,3])
-  y<-as.matrix(dataset.hev.2013[,4:6])
-  c<-as.matrix(dataset.hev.2013[,7])
-  
+  x<-subset(dataset.hev.2013,select=3)
+  y<-subset(dataset.hev.2013,select=4:6)
+  d<-subset(dataset.hev.2013,select=2)
+  c<-subset(dataset.hev.2013,select=7)
+
   # go
   results<-roc.dea(x,y,d,2013,"vrs","o","min","d",env=c)
   hev<-which(results$roc_local>0)
-  cbind(hev,results$roc_local[hev,])[order(c[hev,]),]
+  data.frame(Class=c[hev,],SOA=hev,LocalRoC=results$roc_local[hev,])[order(c[hev,]),]
   # NOTE: the published results include a typo on roc_local[82,]
   #       this will be corrected in forthcoming book chapter(Lim, D-J. et al., 2016).
 }

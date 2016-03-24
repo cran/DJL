@@ -5,9 +5,9 @@
 \usage{map.soa.dea(xdata, ydata, date, rts, orientation,
             sg="ssm", ncv=NULL, env=NULL, mk="dmu")}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
     \code{"vrs"  }{Variable RTS} \cr
@@ -23,8 +23,8 @@
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
-  \item{ncv}{Non-controllable variable index for internal NDF (\emph{1} by \emph{(m+s)} binary matrix)}
-  \item{env}{Environment index for external NDF (\emph{n} by \emph{1} matrix)}
+  \item{ncv}{Non-controllable variable index(binary) for internal NDF (\emph{1} by \emph{(m+s)})}
+  \item{env}{Environment index for external NDF (\emph{n} by \emph{1})}
   \item{mk}{Marker on the map \cr
     \code{"dmu"  }{DMU index (default)} \cr
     \code{"eff"  }{Efficiency score } 
@@ -45,9 +45,9 @@
   fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
 
 # Parameters
-  d<-as.matrix(fis[,2])
-  x<-as.matrix(fis[,4])
-  y<-as.matrix(fis[,6:7])
+  x<-subset(fis,select=4)
+  y<-subset(fis,select=6:7)
+  d<-subset(fis,select=2)
 
 # Generate an SOA map
   map.soa.dea(x,y,d,"crs","o")

@@ -11,6 +11,7 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
   # library(lpSolveAPI)  
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   
   # Data frames

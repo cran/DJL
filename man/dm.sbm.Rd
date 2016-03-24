@@ -4,8 +4,8 @@
 \description{Implements \emph{Tone}'s slack-based model (non-radial & (non-)oriented measure).}
 \usage{dm.sbm(xdata, ydata, rts, orientation="n", se=0, sg="ssm", date=NULL)}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
     \code{"vrs"  }{Variable RTS} \cr
@@ -23,7 +23,7 @@
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{date}{Production date (\emph{n} by \emph{1})}
 }
 \value{
   \item{\code{$eff}}{Efficiency score}
@@ -54,7 +54,7 @@ Tone, Kaoru. "A slacks-based measure of super-efficiency in data envelopment ana
   dm.sbm(x,y,"crs")
 
 # Reproduce Table 1 in Tone.(2002)
-  # Published input slacks are weak-Pareto optimal (confirmed by Tone)
+  # Published input slacks are alternate optima (confirmed by Tone)
   # ready
   x<-matrix(c(4,7,8,4,2,10,12,3,3,1,2,4,1,1),ncol=2)
   y<-matrix(c(1,1,1,1,1,1,1),ncol=1)

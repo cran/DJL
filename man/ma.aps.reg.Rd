@@ -5,8 +5,8 @@
 \usage{ma.aps.reg(dv, iv, min=1, max, mad=FALSE, aic=FALSE, bic=FALSE,
            model.sig=TRUE, coeff.sig=TRUE, coeff.vif=TRUE, coeff.cor=FALSE)}
 \arguments{
-  \item{dv}{Dependent variable (\emph{r} by \emph{1} matrix)}
-  \item{iv}{Independent variable(s) (\emph{r} by \emph{c} matrix)}
+  \item{dv}{Dependent variable (\emph{r} by \emph{1})}
+  \item{iv}{Independent variable(s) (\emph{r} by \emph{c})}
   \item{min}{Minimum number of independent variable to explore (>=\emph{1})}
   \item{max}{Maximum number of independent variable to explore (<=\emph{r}/10)}
   \item{mad}{Returns mean absolute deviation when \code{TRUE}}
@@ -24,9 +24,9 @@
 data(dataset.airplane.2017)
 
 # ready
-dv<-dataset.airplane.2017[,2,drop=FALSE]
-iv<-dataset.airplane.2017[,3:7,drop=FALSE]
-  
+dv<-subset(dataset.airplane.2017,select=2)
+iv<-subset(dataset.airplane.2017,select=3:7)
+
 # go
 ma.aps.reg(dv,iv,1,3,mad=TRUE,coeff.cor=TRUE)
 }

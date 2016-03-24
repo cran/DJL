@@ -9,8 +9,9 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
   if(max(date)<=t){stop('t is later than dataset.')}
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date);g<-as.matrix(g) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(w)){w<-matrix(c(0),ncol=s)}
+  if(is.null(w)) w<-matrix(c(0),ncol=s) else w<-as.matrix(w)
   o<-matrix(c(1:n),ncol=1) # original data order
   
   # Sort data ascending order

@@ -4,9 +4,9 @@
 \description{Employs \code{dm.sf} over time to estimate the arrival of known specifications. This function is valid only when multiplicative form of directional vector is used.}
 \usage{target.arrival.sf(xdata, ydata, date, t, rts, g, w=NULL, sg="ssm", ftype="d")}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
@@ -14,8 +14,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)} matrix)}
-  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s} matrix)} 
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
@@ -53,10 +53,10 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
   data(dataset.hev.2013)
   
   # ready
-  d<-as.matrix(dataset.hev.2013[,2])
-  x<-as.matrix(dataset.hev.2013[,3])
-  y<-as.matrix(dataset.hev.2013[,4:6])
-  g<-matrix(c(x,y),ncol=4)
+  x<-subset(dataset.hev.2013,select=3)
+  y<-subset(dataset.hev.2013,select=4:6)
+  d<-subset(dataset.hev.2013,select=2)
+  g<-data.frame(x,y)
   
   # go
   target.arrival.sf(x,y,d,2012,"vrs",g)$arrival_seg

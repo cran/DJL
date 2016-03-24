@@ -10,6 +10,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   if(max(date)<=t){stop('t is later than dataset.')}
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   
   # Sort data ascending order

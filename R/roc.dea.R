@@ -10,13 +10,14 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   if(max(date)<t){stop('t is later than dataset.')}
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   o<-matrix(c(1:n),ncol=1) # original data order
   
   # Sort data ascending order
-  x<-matrix(c(xdata[order(date),]),ncol=m)
-  y<-matrix(c(ydata[order(date),]),ncol=s)
-  d<-matrix(c(date[order(date),]),ncol=1)
+  x<-matrix(c(xdata[order(date),]),ncol=m);colnames(x)<-colnames(xdata)
+  y<-matrix(c(ydata[order(date),]),ncol=s);colnames(y)<-colnames(ydata)
+  d<-matrix(c(date[order(date),]),ncol=1);colnames(d)<-colnames(date)
   o<-matrix(c(o[order(date),]),ncol=1)
   
   # Data frames

@@ -11,8 +11,10 @@ function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
   # library(lpSolveAPI)  
 
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(ncv)){ncv<-matrix(c(0),ncol=m+s)}
+  if(is.null(ncv)) ncv<-matrix(c(0),ncol=m+s) else ncv<-as.matrix(ncv)
+  if(!is.null(env))env<-as.matrix(env)
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)

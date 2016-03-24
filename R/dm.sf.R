@@ -10,8 +10,9 @@ function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
   # library(lpSolveAPI)
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);g<-as.matrix(g);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(w)){w<-matrix(c(0),ncol=s)}
+  if(is.null(w)) w<-matrix(c(0),ncol=s) else w<-as.matrix(w)
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)

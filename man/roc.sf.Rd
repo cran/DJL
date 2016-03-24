@@ -4,9 +4,9 @@
 \description{Employs \code{dm.sf} over time to calculate RoCs. This function is valid only when multiplicative form of directional vector is used.}
 \usage{roc.sf(xdata, ydata, date, t, rts, g, w=NULL, sg="ssm", ftype="d")}
 \arguments{
-  \item{xdata}{Input(s) vector (\emph{n} by \emph{m} matrix)}
-  \item{ydata}{Output(s) vector (\emph{n} by \emph{s} matrix)}
-  \item{date}{Production date (\emph{n} by \emph{1} matrix)}
+  \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
+  \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
+  \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
     \code{"crs"  }{Constant RTS} \cr  
@@ -14,8 +14,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)} matrix)}
-  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s} matrix)} 
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
@@ -54,10 +54,10 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
     fce<-subset(dataset.engine.2015,dataset.engine.2015[,3]==4)
     
   # Parameters
-    d<-as.matrix(fce[,2])
-    x<-as.matrix(fce[,4])
-    y<-as.matrix(fce[,5:7])
-    g<-matrix(c(rep(0,nrow(x)),y),nrow=nrow(x),ncol=4)
+    x<-subset(fce,select=4)
+    y<-subset(fce,select=5:7)
+    d<-subset(fce,select=2)
+    g<-as.matrix(data.frame(0,y))
     w<-matrix(c(1,0,0),ncol=3)
 
   # Calc local Roc

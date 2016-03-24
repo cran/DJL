@@ -14,6 +14,7 @@ function(xdata,ydata,date,rts,g,w=NULL,sg="ssm",mk="dmu"){
   }
   
   # Parameters
+  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date);g<-as.matrix(g) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   o<-matrix(c(1:n),ncol=1) # original data order
   
