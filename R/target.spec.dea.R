@@ -15,8 +15,8 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   # Estimation of the orientation
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(mtype=="tidea")date<-as.matrix(date) # format input data as matrix
   m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(alpha) && !is.null(beta)){alpha<-matrix(rep(NA,m),nrow=1,ncol=m);orientation<-"i"}
-  if(!is.null(alpha) && is.null(beta)){beta<-matrix(rep(NA,s),nrow=1,ncol=s);orientation<-"o"}
+  if(is.null(alpha) && !is.null(beta)){alpha<-matrix(rep(NA,m),nrow=1,ncol=m);beta<-as.matrix(beta);orientation<-"i"}
+  if(!is.null(alpha) && is.null(beta)){beta<-matrix(rep(NA,s),nrow=1,ncol=s);alpha<-as.matrix(alpha);orientation<-"o"}
   if(orientation=="i" && ncol(as.matrix(wv))!=m){stop('wv must have the same number of column with xdata.')}
   if(orientation=="o" && ncol(as.matrix(wv))!=s){stop('wv must have the same number of column with ydata.')}
   if(!is.null(env)) env<-as.matrix(env)
