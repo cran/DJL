@@ -1,6 +1,6 @@
 \name{map.soa.dea}
 \alias{map.soa.dea}
-\title{Generate SOA map using DEA}
+\title{SOA mapping using DEA}
 \description{Employs \code{dm.dea} over time to generate a state-of-the-art map.}
 \usage{map.soa.dea(xdata, ydata, date, rts, orientation,
             sg="ssm", ncv=NULL, env=NULL, mk="dmu")}
@@ -32,10 +32,10 @@
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
-  \code{\link{map.soa.ddf}} SOA map using DDF \cr
-  \code{\link{map.soa.dea}} SOA map using DEA \cr
-  \code{\link{map.soa.sbm}} SOA map using SBM \cr
-  \code{\link{map.soa.sf}} SOA map using SF \cr
+  \code{\link{map.soa.ddf}} SOA mapping using DDF \cr
+  \code{\link{map.soa.dea}} SOA mapping using DEA \cr
+  \code{\link{map.soa.sbm}} SOA mapping using SBM \cr
+  \code{\link{map.soa.sf}} SOA mapping using SF \cr
 }
 \examples{
 # Load engine dataset

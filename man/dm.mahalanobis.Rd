@@ -2,12 +2,12 @@
 \alias{dm.mahalanobis}
 \title{Distance measure using Mahalanobis distance for outlier detection}
 \description{Implements \emph{Mahalanobis} distance measure for outlier detection. In addition to the basic distance measure, boxplots are provided with potential outlier(s) to give an insight into the early stage of data cleansing task.}
-\usage{dm.mahalanobis(data, from="mean", p=10, plot=FALSE, v.index=NULL, layout=NULL)}
+\usage{dm.mahalanobis(data, from="median", p=10, plot=FALSE, v.index=NULL, layout=NULL)}
 \arguments{
   \item{data}{Dataframe}
   \item{from}{Datum point from which the distance is measured \cr
-    \code{"mean"    }{Mean of each column (default)} \cr  
-    \code{"median"  }{Median of each column}
+    \code{"mean"    }{Mean of each column} \cr  
+    \code{"median"  }{Median of each column (default)}
   }
   \item{p}{Percentage to which outlier point(s) is noted (default of 10)}
   \item{plot}{Switch for boxplot(s)}
@@ -18,8 +18,9 @@
 }
 \value{
   \item{\code{$dist}}{\code{Mahalanobis} distance from \code{from}}
+  \item{\code{$excluded}}{Excluded row(s) in row number}
   \item{\code{$order}}{Distance order (decreasing) in row number}
-  \item{\code{$suspects}}{Potential outlier(s) in row number}
+  \item{\code{$suspect}}{Potential outlier(s) in row number}
 }
 \references{Hair, Joseph F., et al. Multivariate data analysis. Vol. 7. \emph{Upper Saddle River}, NJ: Pearson Prentice Hall, 2006.}
 \author{Dong-Joon Lim, PhD}

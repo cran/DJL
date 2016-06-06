@@ -1,4 +1,18 @@
 ===================================================================================
+DJL v2.3 (Release date: 2016-06-06)
+===================================================================================
+
+Code>
+1. map.corr: new feature added
+2. dm.mahalanobis: row(s) including NA will be excluded
+
+Man>
+1. map.corr: new feature added
+2. dm.mahalanobis: value 'excluded' added
+3. target.spec.dea: reference updated
+
+
+===================================================================================
 DJL v2.2 (Release date: 2016-05-16)
 ===================================================================================
 

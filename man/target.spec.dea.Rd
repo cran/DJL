@@ -43,7 +43,7 @@
 }
 \references{
 Lim, Dong-Joon, "Inverse DEA with frontier changes for new product target setting." 
-\emph{European Journal of Operational Research} (In press) (2016).
+\emph{European Journal of Operational Research} 254.2 (2016): 510~516.
 
 Wei, Quanling, Jianzhong Zhang, and Xiangsun Zhang. "An inverse DEA model for inputs/outputs estimate." \emph{European Journal of Operational Research} 121.1 (2000): 151~163.
 }

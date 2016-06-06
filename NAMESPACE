@@ -2,12 +2,16 @@ import(car,combinat,lpSolveAPI)
 importFrom("stats","na.omit","AIC","BIC","anova","cor")
 importFrom("graphics", "abline", "boxplot", "par", "rect", "text")
 importFrom("stats", "cov", "fivenum", "mahalanobis")
+importFrom("grDevices", "colorRampPalette")
+importFrom("graphics", "axis", "grid", "lines", "plot", "points")
+importFrom("stats", "complete.cases", "sd")
 export(dm.ddf,
        dm.dea,
        dm.mahalanobis,
        dm.sbm,
        dm.sf,
        ma.aps.reg,
+       map.corr,
        map.soa.ddf,
        map.soa.dea,
        map.soa.sbm,

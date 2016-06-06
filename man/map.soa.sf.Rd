@@ -1,6 +1,6 @@
 \name{map.soa.sf}
 \alias{map.soa.sf}
-\title{Generate SOA map using SF}
+\title{SOA mapping using SF}
 \description{Employs \code{dm.sf} over time to generate a state-of-the-art map.}
 \usage{map.soa.sf(xdata, ydata, date, rts, g, w=NULL, sg="ssm", mk="dmu")}
 \arguments{
@@ -30,10 +30,10 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
-  \code{\link{map.soa.ddf}} SOA map using DDF \cr
-  \code{\link{map.soa.dea}} SOA map using DEA \cr
-  \code{\link{map.soa.sbm}} SOA map using SBM \cr
-  \code{\link{map.soa.sf}} SOA map using SF \cr
+  \code{\link{map.soa.ddf}} SOA mapping using DDF \cr
+  \code{\link{map.soa.dea}} SOA mapping using DEA \cr
+  \code{\link{map.soa.sbm}} SOA mapping using SBM \cr
+  \code{\link{map.soa.sf}} SOA mapping using SF \cr
 }
 \examples{
 # Reproduce Table 2 in Lim, D-J. (2015)
