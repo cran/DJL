@@ -1,5 +1,5 @@
 target.spec.dea <-
-function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv,rts,sg="ssm",ftype="d",ncv=NULL,env=NULL){
+function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv,rts="crs",sg="ssm",ftype="d",ncv=NULL,env=NULL,cv="convex"){
   
   # Initial checks
   if(is.null(date) && sg!="ssm"){stop('sg must be "ssm" when date is null.')}
@@ -11,7 +11,8 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   if(is.null(date)||is.null(t)||is.null(dt)) mtype<-"sidea" else mtype<-"tidea"
   if(mtype=="tidea" && t<=min(date)){stop('t is earlier than dataset.')}
   if(mtype=="tidea" && max(date)<t){stop('t is later than dataset.')}
-
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
+  
   # Estimation of the orientation
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(mtype=="tidea")date<-as.matrix(date) # format input data as matrix
   m<-ncol(xdata); s<-ncol(ydata)
@@ -24,7 +25,7 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   # Construction of the PPS
   if(mtype=="tidea"){
     # Calc RoCs
-    grapejelly<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
+    grapejelly<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype,cv=cv)
     if(et=="c"){et<-grapejelly$eff_t[dmu,]}
     
     # Future reference set
@@ -41,7 +42,7 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
     if(!is.null(env)){env_e<-rbind(env_f,env[dmu,])}
   }else{
     # Calc efficiency
-    grapejelly<-dm.dea(xdata,ydata,rts,orientation)
+    grapejelly<-dm.dea(xdata,ydata,rts,orientation,cv=cv)
     if(et=="c"){et<-grapejelly$eff[dmu,]}
     
     # Experiment set
@@ -54,18 +55,19 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   # Parameters
   n<-nrow(x_e)
   if(is.null(ncv)) ncv<-matrix(c(0),ncol=m+s) else ncv<-as.matrix(ncv)
+  if(cv=="fdh") rts<-"vrs"
   
   # Feasibility check
   if(orientation=="i"){
     x_l<-rbind(as.matrix(x_e[1:(n-1),]),xdata[dmu,]*et)
     y_l<-rbind(as.matrix(y_e[1:(n-1),]),ydata[dmu,])
-    bound<-ydata[dmu,]*(dm.dea(x_l,y_l,rts,"o")$eff[n])
+    bound<-ydata[dmu,]*(dm.dea(x_l,y_l,rts,"o",cv=cv)$eff[n])
     if(sum(beta>bound)>0){stop(paste0('Beta(',paste(beta,collapse=", "),') is greater than feasible bound(',paste(round(bound,4),collapse=", "),').'))}
   }
   if(orientation=="o"){
     x_l<-rbind(as.matrix(x_e[1:(n-1),]),xdata[dmu,])
     y_l<-rbind(as.matrix(y_e[1:(n-1),]),ydata[dmu,]*et)
-    bound<-xdata[dmu,]*(dm.dea(x_l,y_l,rts,"i")$eff[n])
+    bound<-xdata[dmu,]*(dm.dea(x_l,y_l,rts,"i",cv=cv)$eff[n])
     if(sum(alpha<bound)>0){stop(paste0('Alpha(',paste(alpha,collapse=", "),') is smaller than feasible bound(',paste(round(bound,4),collapse=", "),').'))}
   }
   
@@ -87,6 +89,9 @@ function(xdata,ydata,date=NULL,t=NULL,dt=NULL,dmu,et="c",alpha=NULL,beta=NULL,wv
   if(rts=="crs"){set.constr.type(lp.idea,0,1)}
   if(rts=="irs"){add.constraint(lp.idea,c(rep(1,n)),indices=c(1:n),">=",1)}
   if(rts=="drs"){add.constraint(lp.idea,c(rep(1,n)),indices=c(1:n),"<=",1)}
+  
+  # Set type
+  if(cv=="fdh"){set.type(lp.idea,1:n,"binary")}
   
   # Input constraints
   for(i in 1:m){

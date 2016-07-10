@@ -2,14 +2,15 @@
 \alias{target.arrival.dea}
 \title{Arrival target setting using DEA}
 \description{Employs \code{dm.dea} over time to estimate the arrival of known specifications.}
-\usage{target.arrival.dea(xdata, ydata, date, t, rts, orientation, sg="ssm", ftype="d")}
+\usage{target.arrival.dea(xdata, ydata, date, t, rts="crs", orientation, 
+                   sg="ssm", ftype="d", cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -27,6 +28,10 @@
     \code{"d"  }{Dynamic frontier (default)} \cr  
     \code{"s"  }{Static frontier}
   }  
+ \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$eff_t}}{Efficiency at \code{t}}
@@ -53,12 +58,12 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
 \examples{
 # Reproduce Table 4 in Lim, D-J., and Timothy R. Anderson.(2016)
   # Load airplane dataset
-  data(dataset.airplane.2017)
+  df<-dataset.airplane.2017
   
   # ready
   x<-data.frame(Flew=rep(1,28))
-  y<-subset(dataset.airplane.2017,select=3:7)
-  d<-subset(dataset.airplane.2017,select=2)
+  y<-subset(df,select=3:7)
+  d<-subset(df,select=2)
 
   # go
   target.arrival.dea(x,y,d,2007,"vrs","o","min","d")$arrival_seg

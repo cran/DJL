@@ -1,5 +1,5 @@
 target.arrival.dea <-
-function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
+function(xdata,ydata,date,t,rts="crs",orientation,sg="ssm",ftype="d",cv="convex"){
   
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
@@ -8,10 +8,12 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
   if(t<=min(date)){stop('t is earlier than dataset.')}
   if(max(date)<=t){stop('t is later than dataset.')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Parameters
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
+  if(cv=="fdh") rts<-"vrs"
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m)
@@ -40,7 +42,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   y_t<-matrix(y[1:e,],nrow=e)
   
   # DEA internal function 
-  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,a,z){
+  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,a,z,cv){
     
     # Load library
     # library(lpSolveAPI)  
@@ -67,6 +69,9 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
       if(rts=="crs"){set.constr.type(lp.dea,0,1)}
       if(rts=="irs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),">=",1)}
       if(rts=="drs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),"<=",1)}
+      
+      # Set type
+      if(cv=="fdh"){set.type(lp.dea,1:n,"binary")}
       
       # Input constraints
       if(orientation=="o"){for(i in 1:m){add.constraint(lp.dea,c(xdata[,i],1),indices=c(1:n,n+1+i),"=",xdata[k,i])}}
@@ -125,7 +130,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
     x_f<-rbind(x_t,x[i,])
     y_f<-rbind(y_t,y[i,])
     # Run DEA
-    temp<-dm.dea.internal(x_f,y_f,rts,orientation,se=1,sg,d,e+1,e+1)
+    temp<-dm.dea.internal(x_f,y_f,rts,orientation,se=1,sg,d,e+1,e+1,cv)
     # Save eff_f
     eff_t[i,]<-temp$eff[e+1,]
     lambda[i,1:e]<-temp$lambda[e+1,1:e]
@@ -136,7 +141,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d"){
   if(ftype=="s"){ed[,1]<-t}
   
   # Calc iRoC
-  roc<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype)
+  roc<-roc.dea(xdata,ydata,date,t,rts,orientation,sg,ftype,cv=cv)
   roc_local<-roc$roc_local;roc_local_bi<-ifelse(is.na(roc_local),0,1);roc_avg<-roc$roc_avg
   for(i in (e+1):n){roc_ind[i,1]<-sum(roc_local[1:e,]*lambda[i,1:e],na.rm=TRUE)/sum(lambda[i,1:e]*roc_local_bi[1:e,])}
 

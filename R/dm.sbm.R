@@ -1,11 +1,12 @@
 dm.sbm <-
-function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
+function(xdata,ydata,rts="crs",orientation="n",se=FALSE,sg="ssm",date=NULL,cv="convex"){
 
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
   if(is.na(match(orientation,c("n","i","o")))){stop('orientation must be "n", "i" or "o".')}
-  if(is.na(match(se,c(0,1)))){stop('se must be either 0 or 1.')}
+  if(is.na(match(se,c(0,1,FALSE,TRUE)))){stop('se must be either 0(FALSE) or 1(TRUE).')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Load library
   # library(lpSolveAPI)  
@@ -13,6 +14,8 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
   # Parameters
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
+  if(is.logical(se)) se<-ifelse(isTRUE(se),1,0)
+  if(cv=="fdh") rts<-"vrs"
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)
@@ -37,8 +40,12 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
       if(rts=="irs"){add.constraint(lp.sbm,c(rep(1,n)),indices=c(1:n),">=",1)}
       if(rts=="drs"){add.constraint(lp.sbm,c(rep(1,n)),indices=c(1:n),"<=",1)}
       
-      # Let t be 1 to avoid clutters for non-CRS
+      # Set type
+      if(cv=="fdh"){set.type(lp.sbm,1:n,"binary")}
+      
+      # Let t be 1 to avoid clutters for non-CRS / oriented model
       if(rts!="crs"){add.constraint(lp.sbm,c(1),indices=c(n+1),"=",1)}
+      if(orientation!="n"){add.constraint(lp.sbm,c(1),indices=c(n+1),"=",1)}
       
       # Normalization constraint
       if(orientation=="n"){add.constraint(lp.sbm,c(1,1/(s*ydata[k,])),indices=c(n+1,(n+1+m+1):(n+1+m+s)),"=",1)}
@@ -49,14 +56,18 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
       # Output constraints
       for(r in 1:s){add.constraint(lp.sbm,c(ydata[,r],-ydata[k,r],-1),indices=c(1:(n+1),n+1+m+r),"=",0)}
       
+      # Oriented model - no slacks
+      if(orientation=="i"){add.constraint(lp.sbm,rep(1,s),indices=c((n+1+m+1):(n+1+m+s)),"=",0)}
+      if(orientation=="o"){add.constraint(lp.sbm,rep(1,m),indices=c((n+1+1):(n+1+m)),"=",0)}
+      
       # Bounds
-      set.bounds(lp.sbm,lower=c(rep(0,n),-Inf,rep(0,m+s)))  
+      set.bounds(lp.sbm,lower=c(rep(0,n+1+m+s)))  
 
       # Solve
       solve.lpExtPtr(lp.sbm)
       
       # Get results
-      results.efficiency[k]<-get.objective(lp.sbm)      
+      results.efficiency[k]<-ifelse(orientation=="o",-1/get.objective(lp.sbm),get.objective(lp.sbm))
       temp.p<-get.variables(lp.sbm)
       results.lambda[k,]<-temp.p[1:n]/temp.p[n+1]
       results.xslack[k,]<-temp.p[(n+2):(n+1+m)]/temp.p[n+1]
@@ -105,9 +116,13 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
       if(rts=="irs"){add.constraint(lp.sbm,c(rep(1,n)),indices=c(1:n),">=",1)}
       if(rts=="drs"){add.constraint(lp.sbm,c(rep(1,n)),indices=c(1:n),"<=",1)}
       
-      # Let t be 1 to avoid clutters for non-CRS / non-bi
-      if(rts!="crs" || orientation!="n"){add.constraint(lp.sbm,c(1),indices=c(n+1),"=",1)}
+      # Set type
+      if(cv=="fdh"){set.type(lp.sbm,1:n,"binary")}
       
+      # Let t be 1 to avoid clutters for non-CRS / oriented model
+      if(rts!="crs"){add.constraint(lp.sbm,c(1),indices=c(n+1),"=",1)}
+      if(orientation!="n"){add.constraint(lp.sbm,c(1),indices=c(n+1),"=",1)}
+
       # Normalization constraint
       if(orientation=="n"){add.constraint(lp.sbm,c(1/(s*ydata[k,])),indices=c((n+1+m+1):(n+1+m+s)),"=",1)}
       
@@ -135,7 +150,7 @@ function(xdata,ydata,rts,orientation="n",se=0,sg="ssm",date=NULL){
       solve.lpExtPtr(lp.sbm)
       
       # Get results
-      results.efficiency[k]<-get.objective(lp.sbm)      
+      results.efficiency[k]<-ifelse(orientation=="o",-1/get.objective(lp.sbm),get.objective(lp.sbm))
       temp.p<-get.variables(lp.sbm)
       results.lambda[k,]<-temp.p[1:n]/temp.p[n+1]
       results.xtarget[k,]<-temp.p[(n+2):(n+1+m)]/temp.p[n+1]

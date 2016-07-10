@@ -1,4 +1,24 @@
 ===================================================================================
+DJL v2.4 (Release date: 2016-07-10)
+===================================================================================
+
+Code>
+1. dm.ddf/dea/sbm/sf: convexity argument added for Free Disposal Hull
+2. map.soa.ddf/dea/sbm/sf: convexity argument added for Free Disposal Hull
+3. target.arrival.dea/sf: convexity argument added for Free Disposal Hull
+4. target.spec.dea: convexity argument added for Free Disposal Hull
+5. ma.aps.reg: refined with homemade-combination function
+6. dm.sbm: bug fixed
+
+Man>
+1. dm.ddf/dea/sbm/sf: convexity argument added for Free Disposal Hull
+2. map.soa.ddf/dea/sbm/sf: convexity argument added for Free Disposal Hull
+3. target.arrival.dea/sf: convexity argument added for Free Disposal Hull
+4. target.spec.dea: convexity argument added for Free Disposal Hull
+5. dm.dea: reference / example revised
+
+
+===================================================================================
 DJL v2.3 (Release date: 2016-06-06)
 ===================================================================================
 

@@ -2,14 +2,14 @@
 \alias{map.soa.dea}
 \title{SOA mapping using DEA}
 \description{Employs \code{dm.dea} over time to generate a state-of-the-art map.}
-\usage{map.soa.dea(xdata, ydata, date, rts, orientation,
-            sg="ssm", ncv=NULL, env=NULL, mk="dmu")}
+\usage{map.soa.dea(xdata, ydata, date, rts="crs", orientation,
+            sg="ssm", ncv=NULL, env=NULL, cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{date}{Production date (\emph{n} by \emph{1})}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -25,6 +25,10 @@
   }
   \item{ncv}{Non-controllable variable index(binary) for internal NDF (\emph{1} by \emph{(m+s)})}
   \item{env}{Environment index for external NDF (\emph{n} by \emph{1})}
+    \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
   \item{mk}{Marker on the map \cr
     \code{"dmu"  }{DMU index (default)} \cr
     \code{"eff"  }{Efficiency score } 
@@ -39,10 +43,10 @@
 }
 \examples{
 # Load engine dataset
-  data(dataset.engine.2015)
+  df<-dataset.engine.2015
 
 # Subset for forced induction systems
-  fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
+  fis<-subset(df,grepl("^.C..",df[,8]))
 
 # Parameters
   x<-subset(fis,select=4)

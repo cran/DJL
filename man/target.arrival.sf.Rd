@@ -2,20 +2,21 @@
 \alias{target.arrival.sf}
 \title{Arrival target setting using SF}
 \description{Employs \code{dm.sf} over time to estimate the arrival of known specifications. This function is valid only when multiplicative form of directional vector is used.}
-\usage{target.arrival.sf(xdata, ydata, date, t, rts, g, w=NULL, sg="ssm", ftype="d")}
+\usage{target.arrival.sf(xdata, ydata, date, t, rts="crs", g, 
+                  wd=NULL, sg="ssm", ftype="d", cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
   \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
-  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
+  \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization} \cr
@@ -24,7 +25,11 @@
   \item{ftype}{Frontier type \cr
     \code{"d"  }{Dynamic frontier (default)} \cr  
     \code{"s"  }{Static frontier}
-  }  
+  } 
+  \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$eff_t}}{Efficiency at \code{t}}
@@ -50,12 +55,12 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
 \examples{
 # Estimate arrivals of MY2013 hev models
   # Load hev dataset
-  data(dataset.hev.2013)
+  df<-dataset.hev.2013
   
   # ready
-  x<-subset(dataset.hev.2013,select=3)
-  y<-subset(dataset.hev.2013,select=4:6)
-  d<-subset(dataset.hev.2013,select=2)
+  x<-subset(df,select=3)
+  y<-subset(df,select=4:6)
+  d<-subset(df,select=2)
   g<-data.frame(x,y)
   
   # go

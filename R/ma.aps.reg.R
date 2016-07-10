@@ -8,15 +8,52 @@ function(dv,iv,min=1,max,mad=FALSE,aic=FALSE,bic=FALSE,model.sig=TRUE,coeff.sig=
   dv<-as.matrix(dv)
   
   # Load libraries
-  # library(combinat);library(car)
+  # library(car)
   
+  # Load combination function
+  com<-function(x,m){
+    x<-1:x
+    n<-length(x)
+    e<-0
+    h<-m
+    a<-1:m
+    count<-factorial(n)/(factorial(m)*factorial(n-m))
+    out<-vector("list",count)
+    out[[1]]<-x[a]
+    dim.use<-NULL
+    if(count>1) dim.use<-c(m,count)
+    i<-2
+    nmmp1<- n-m+1
+    mp1<- m+1
+    while(a[1] != nmmp1){
+      if(e< n-h){
+        h<-1
+        e<-a[m]
+        j<-1
+      }else{
+        h<- h+1
+        e<- a[mp1-h]
+        j<- 1:h
+      }
+      a[m-h+j]<- e+j
+      out[[i]]<- x[a]
+      i<- i+1
+    }
+    if(is.null(dim.use)){
+      out<-unlist(out)
+    }else{
+      out<-array(unlist(out),dim.use)
+    } 
+    out
+  }
+
   # Parameters
   fit<-NULL # Nullifying variable to avoid non-binding issue
   r<-sum(mad,aic,bic)
   
   # Run
   for(k in min:max){
-    c<-combn(ncol(as.matrix(iv)),k);t<-dim(c)[2];index<-t(c)
+    c<-com(ncol(as.matrix(iv)),k);t<-dim(c)[2];index<-t(c)
     results.k<-matrix(NA,t,r+2);rownames(results.k)<-c(1:t)  
     colnames(results.k)<-c("Model","Adj.R2",if(mad)"MAD",if(aic)"AIC",if(bic)"BIC")
     for(i in 1:t){

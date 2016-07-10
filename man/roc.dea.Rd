@@ -2,15 +2,15 @@
 \alias{roc.dea}
 \title{Rate of change (RoC) calculation using DEA}
 \description{Employs \code{dm.dea} over time to calculate RoCs.}
-\usage{roc.dea(xdata, ydata, date, t, rts, orientation,
-        sg="ssm", ftype="d", ncv=NULL, env=NULL)}
+\usage{roc.dea(xdata, ydata, date, t, rts="crs", orientation,
+        sg="ssm", ftype="d", ncv=NULL, env=NULL, cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{date}{Production date (\emph{n} by \emph{1})}
   \item{t}{A vantage point from which the RoC is captured}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -30,6 +30,10 @@
   }
   \item{ncv}{Non-controllable variable index(binary) for internal NDF (\emph{1} by \emph{(m+s)})}
   \item{env}{Environment index for external NDF (\emph{n} by \emph{1})}
+  \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$eff_r}}{Efficiency at release (i.e., at each production date)}
@@ -57,25 +61,25 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
 \examples{
 # Reproduce Table 3 in Lim, D-J. et al.(2014)
   # Load airplane dataset
-  data(dataset.airplane.2017)
+  df<-dataset.airplane.2017
   
   # ready
   x<-data.frame(Flew=rep(1,28))
-  y<-subset(dataset.airplane.2017,select=3:7)
-  d<-subset(dataset.airplane.2017,select=2)
+  y<-subset(df,select=3:7)
+  d<-subset(df,select=2)
 
   # go
   roc.dea(x,y,d,2007,"vrs","o","min","d")$roc_past
 
 # Reproduce Table 3 in Lim, D-J. et al.(2015)
   # Load hev dataset
-  data(dataset.hev.2013)
+  df<-dataset.hev.2013
   
   # ready
-  x<-subset(dataset.hev.2013,select=3)
-  y<-subset(dataset.hev.2013,select=4:6)
-  d<-subset(dataset.hev.2013,select=2)
-  c<-subset(dataset.hev.2013,select=7)
+  x<-subset(df,select=3)
+  y<-subset(df,select=4:6)
+  d<-subset(df,select=2)
+  c<-subset(df,select=7)
 
   # go
   results<-roc.dea(x,y,d,2013,"vrs","o","min","d",env=c)

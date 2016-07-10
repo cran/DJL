@@ -1,11 +1,12 @@
 map.soa.dea <-
-function(xdata,ydata,date,rts,orientation,sg="ssm",ncv=NULL,env=NULL,mk="dmu"){
+function(xdata,ydata,date,rts="crs",orientation,sg="ssm",ncv=NULL,env=NULL,cv="convex",mk="dmu"){
 
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
   if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(mk,c("dmu","eff")))){stop('mk must be either "dmu" or "eff".')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Subset index
   till<-function(x,y){
@@ -18,6 +19,7 @@ function(xdata,ydata,date,rts,orientation,sg="ssm",ncv=NULL,env=NULL,mk="dmu"){
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   o<-matrix(c(1:n),ncol=1) # original data order
+  if(cv=="fdh") rts<-"vrs"
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m)
@@ -42,7 +44,7 @@ function(xdata,ydata,date,rts,orientation,sg="ssm",ncv=NULL,env=NULL,mk="dmu"){
     if(!is.null(env)){env_s<-matrix(env[1:e,],ncol=1)}else{env_s=NULL}
     
     # run distance measure
-    dj<-dm.dea(x_s,y_s,rts,orientation,se=0,sg,ncv,env_s)
+    dj<-dm.dea(x_s,y_s,rts,orientation,sg=sg,ncv=ncv,env=env_s,cv=cv)
     
     # soa set
     #soa<-which(round(dj$eff,8)==1) # if slacks are not concerned

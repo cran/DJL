@@ -1,11 +1,12 @@
 dm.dea <-
-function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
+function(xdata,ydata,rts="crs",orientation,se=FALSE,sg="ssm",date=NULL,ncv=NULL,env=NULL,cv="convex"){
 
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
   if(is.na(match(orientation,c("i","o")))){stop('orientation must be either "i" or "o".')}
-  if(is.na(match(se,c(0,1)))){stop('se must be either 0 or 1.')}
+  if(is.na(match(se,c(0,1,FALSE,TRUE)))){stop('se must be either 0(FALSE) or 1(TRUE).')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Load library
   # library(lpSolveAPI)  
@@ -14,7 +15,9 @@ function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   if(is.null(ncv)) ncv<-matrix(c(0),ncol=m+s) else ncv<-as.matrix(ncv)
-  if(!is.null(env))env<-as.matrix(env)
+  if(!is.null(env)) env<-as.matrix(env)
+  if(is.logical(se)) se<-ifelse(isTRUE(se),1,0)
+  if(cv=="fdh") rts<-"vrs"
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)
@@ -38,6 +41,9 @@ function(xdata,ydata,rts,orientation,se=0,sg="ssm",date=NULL,ncv=NULL,env=NULL){
     if(rts=="crs"){set.constr.type(lp.dea,0,1)}
     if(rts=="irs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),">=",1)}
     if(rts=="drs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),"<=",1)}
+    
+    # Set type
+    if(cv=="fdh"){set.type(lp.dea,1:n,"binary")}
     
     # Input constraints
     for(i in 1:m){

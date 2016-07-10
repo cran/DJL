@@ -1,4 +1,4 @@
-import(car,combinat,lpSolveAPI)
+import(car,lpSolveAPI)
 importFrom("stats","na.omit","AIC","BIC","anova","cor")
 importFrom("graphics", "abline", "boxplot", "par", "rect", "text")
 importFrom("stats", "cov", "fivenum", "mahalanobis")

@@ -21,11 +21,11 @@
 \author{Dong-Joon Lim, PhD}
 \examples{
 # Load airplane dataset
-data(dataset.airplane.2017)
+df<-dataset.airplane.2017
 
 # ready
-dv<-subset(dataset.airplane.2017,select=2)
-iv<-subset(dataset.airplane.2017,select=3:7)
+dv<-subset(df,select=2)
+iv<-subset(df,select=3:7)
 
 # go
 ma.aps.reg(dv,iv,1,3,mad=TRUE,coeff.cor=TRUE)

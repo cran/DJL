@@ -2,13 +2,14 @@
 \alias{map.soa.sbm}
 \title{SOA mapping using SBM}
 \description{Employs \code{dm.sbm} over time to generate a state-of-the-art map.}
-\usage{map.soa.sbm(xdata, ydata, date, rts, orientation="n", sg="ssm", mk="dmu")}
+\usage{map.soa.sbm(xdata, ydata, date, rts="crs", 
+            orientation="n", sg="ssm", cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{date}{Production date (\emph{n} by \emph{1})}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -22,6 +23,10 @@
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
+  }
+    \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
   \item{mk}{Marker on the map \cr
     \code{"dmu"  }{DMU index (default)} \cr
@@ -37,10 +42,10 @@
 }
 \examples{
 # Load engine dataset
-  data(dataset.engine.2015)
+  df<-dataset.engine.2015
 
 # Subset for forced induction systems
-  fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
+  fis<-subset(df,grepl("^.C..",df[,8]))
 
 # Parameters
   x<-subset(fis,select=4)
@@ -48,5 +53,5 @@
   d<-subset(fis,select=2)
 
 # Generate an SOA map
-  map.soa.sbm(x,y,d,"crs")
+  map.soa.sbm(x,y,d)
 }

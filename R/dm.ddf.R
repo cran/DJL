@@ -1,10 +1,11 @@
 dm.ddf <-
-function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
+function(xdata,ydata,rts="crs",g,wd=NULL,se=FALSE,sg="ssm",date=NULL,cv="convex"){
 
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
-  if(is.na(match(se,c(0,1)))){stop('se must be either 0 or 1.')}
+  if(is.na(match(se,c(0,1,FALSE,TRUE)))){stop('se must be either 0(FALSE) or 1(TRUE).')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Load library
   # library(lpSolveAPI)
@@ -12,7 +13,9 @@ function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
   # Parameters
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);g<-as.matrix(g);if(!is.null(date))date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(w)) w<-matrix(c(0),ncol=s) else w<-as.matrix(w)
+  if(is.null(wd)) wd<-matrix(c(0),ncol=s) else wd<-as.matrix(wd)
+  if(is.logical(se)) se<-ifelse(isTRUE(se),1,0)
+  if(cv=="fdh") rts<-"vrs"
   
   # Data frames
   results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)
@@ -36,15 +39,18 @@ function(xdata,ydata,rts,g,w=NULL,se=0,sg="ssm",date=NULL){
     if(rts=="irs"){add.constraint(lp.ddf,c(rep(1,n*2)),indices=c(1:(n*2)),">=",1)}
     if(rts=="drs"){add.constraint(lp.ddf,c(rep(1,n*2)),indices=c(1:(n*2)),"<=",1)}
     
+    # Set type
+    if(cv=="fdh"){set.type(lp.ddf,1:n,"binary")}
+    
     # Mu
-    if(rts=="crs"||rts=="drs"||sum(w)==0){add.constraint(lp.ddf,c(rep(1,n)),indices=c((n+1):(n+n)),"=",0)}
+    if(rts=="crs"||rts=="drs"||sum(wd)==0){add.constraint(lp.ddf,c(rep(1,n)),indices=c((n+1):(n+n)),"=",0)}
     
     # Input constraints
     for(i in 1:m){add.constraint(lp.ddf,c(xdata[,i],xdata[,i],g[k,i],1),indices=c(1:(n+n),n+n+i,n+n+m+s+i),"=",xdata[k,i])}
     
     # Output constraints
     for(r in 1:s){
-      if(w[1,r]==1){
+      if(wd[1,r]==1){
         add.constraint(lp.ddf,c(ydata[,r],g[k,m+r]),indices=c(1:n,n+n+m+r),"=",ydata[k,r])
         add.constraint(lp.ddf,c(1),indices=c(n+n+m+s+m+r),"=",0)
       }else{add.constraint(lp.ddf,c(ydata[,r],-g[k,m+r],-1),indices=c(1:n,n+n+m+r,n+n+m+s+m+r),"=",ydata[k,r])}

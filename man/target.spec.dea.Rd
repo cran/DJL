@@ -3,8 +3,8 @@
 \title{Spec target setting using DEA}
 \description{Employs \code{inverse DEA} to estimate specifications(in/out-puts) to achieve a predetermined efficiency.}
 \usage{target.spec.dea(xdata, ydata, date=NULL, t=NULL, dt=NULL, dmu, et="c",
-                alpha=NULL, beta=NULL, wv, rts, sg="ssm", ftype="d",
-                ncv=NULL, env=NULL)}
+                alpha=NULL, beta=NULL, wv, rts="crs", sg="ssm", ftype="d",
+                ncv=NULL, env=NULL, cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -17,7 +17,7 @@
   \item{beta}{Perturbed output(s) of designated DMU (\emph{1} by \emph{s})}
   \item{wv}{Weight vector for scalarization (\emph{1} by \emph{m} or \emph{s})}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -33,6 +33,10 @@
   }  
   \item{ncv}{Non-controllable variable index(binary) for internal NDF (\emph{1} by \emph{(m+s)})}
   \item{env}{Environment index for external NDF (\emph{n} by \emph{1})}
+  \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$alpha}}{Estimated input(s)}
@@ -66,10 +70,10 @@ Wei, Quanling, Jianzhong Zhang, and Xiangsun Zhang. "An inverse DEA model for in
 
 # Reproduce Table 4 in Lim, D-J. (2016)
   # Load engine dataset
-    data(dataset.engine.2015)
+    df<-dataset.engine.2015
   
   # Subset for forced induction systems
-    fis<-subset(dataset.engine.2015,grepl("^.C..",dataset.engine.2015[,8]))
+    fis<-subset(df,grepl("^.C..",df[,8]))
   
   # ready
     # Suppose one wants to estimate Porsche 911 turbo s' engine specs

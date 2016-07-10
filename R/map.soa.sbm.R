@@ -1,11 +1,12 @@
 map.soa.sbm <-
-function(xdata,ydata,date,rts,orientation="n",sg="ssm",mk="dmu"){
+function(xdata,ydata,date,rts="crs",orientation="n",sg="ssm",cv="convex",mk="dmu"){
   
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
   if(is.na(match(orientation,c("n","i","o")))){stop('orientation must be "n", "i" or "o".')}
   if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
   if(is.na(match(mk,c("dmu","eff")))){stop('mk must be either "dmu" or "eff".')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Subset index
   till<-function(x,y){
@@ -18,6 +19,7 @@ function(xdata,ydata,date,rts,orientation="n",sg="ssm",mk="dmu"){
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   o<-matrix(c(1:n),ncol=1) # original data order
+  if(cv=="fdh") rts<-"vrs"
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m)
@@ -40,7 +42,7 @@ function(xdata,ydata,date,rts,orientation="n",sg="ssm",mk="dmu"){
     y_s<-matrix(y[1:e,],nrow=e)
     
     # run distance measure
-    dj<-dm.sbm(x_s,y_s,rts,orientation,se=0,sg)
+    dj<-dm.sbm(x_s,y_s,rts,orientation,sg=sg,cv=cv)
     
     # soa set
     soa<-which(round(dj$eff,8)==1)

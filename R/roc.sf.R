@@ -1,5 +1,5 @@
 roc.sf <-
-function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
+function(xdata,ydata,date,t,rts="crs",g,wd=NULL,sg="ssm",ftype="d",cv="convex"){
   
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
@@ -7,12 +7,14 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
   if(t<=min(date)){stop('t is earlier than dataset.')}
   if(max(date)<t){stop('t is later than dataset.')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Parameters
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date);g<-as.matrix(g) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(w)) w<-matrix(c(0),ncol=s) else w<-as.matrix(w)
+  if(is.null(wd)) wd<-matrix(c(0),ncol=s) else wd<-as.matrix(wd)
   o<-matrix(c(1:n),ncol=1) # original data order
+  if(cv=="fdh") rts<-"vrs"
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m)
@@ -40,14 +42,14 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
   r<-till(unique(d),t)
   
   # SF internal function 
-  dm.sf.internal<-function(xdata,ydata,rts,g,w,se=0,sg,date,a,z){
+  dm.sf.internal<-function(xdata,ydata,rts,g,wd,se=0,sg,date,a,z,cv){
     
     # Load library
     # library(lpSolveAPI)
     
     # Parameters
     n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-    if(is.null(w)){w<-matrix(c(0),ncol=s)}
+    if(is.null(wd)){wd<-matrix(c(0),ncol=s)}
     
     # Data frames
     results.efficiency<-matrix(rep(NA,n),nrow=n,ncol=1)
@@ -69,15 +71,18 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
       if(rts=="irs"){add.constraint(lp.sf,c(rep(1,n*2)),indices=c(1:(n*2)),">=",1)}
       if(rts=="drs"){add.constraint(lp.sf,c(rep(1,n*2)),indices=c(1:(n*2)),"<=",1)}
       
+      # Set type
+      if(cv=="fdh"){set.type(lp.sf,1:n,"binary")}
+      
       # Mu
-      if(rts=="crs"||rts=="drs"||sum(w)==0){add.constraint(lp.sf,c(rep(1,n)),indices=c((n+1):(n+n)),"=",0)}
+      if(rts=="crs"||rts=="drs"||sum(wd)==0){add.constraint(lp.sf,c(rep(1,n)),indices=c((n+1):(n+n)),"=",0)}
       
       # Input constraints
       for(i in 1:m){add.constraint(lp.sf,c(xdata[,i],xdata[,i],g[k,i],1),indices=c(1:n,(n+1):(n+n),n+n+1,n+n+1+i),"=",xdata[k,i])}
       
       # Output constraints
       for(r in 1:s){
-        if(w[1,r]==1){
+        if(wd[1,r]==1){
           add.constraint(lp.sf,c(ydata[,r],ydata[,r],g[k,m+r]),indices=c(1:n,(n+1):(n+n),n+n+1),"=",ydata[k,r])
           add.constraint(lp.sf,c(1),indices=c(n+n+1+m+r),"=",0)
         }else{add.constraint(lp.sf,c(ydata[,r],-g[k,m+r],-1),indices=c(1:n,n+n+1,n+n+1+m+r),"=",ydata[k,r])}
@@ -140,8 +145,8 @@ function(xdata,ydata,date,t,rts,g,w=NULL,sg="ssm",ftype="d"){
     g_t<-matrix(g[1:e,],nrow=e)
     
     # Run SF
-    if(i==r){temp<-dm.sf.internal(x_t,y_t,rts,g_t,w,0,sg,d_t,1,e)}
-    else{temp<-dm.sf.internal(x_t,y_t,rts,g_t,w,0,sg,d_t,s,e)}
+    if(i==r){temp<-dm.sf.internal(x_t,y_t,rts,g_t,wd,0,sg,d_t,1,e,cv)}
+    else{temp<-dm.sf.internal(x_t,y_t,rts,g_t,wd,0,sg,d_t,s,e,cv)}
     
     # Save eff_r & eff_t
     if(i==r){eff_r[s:e,]<-temp$eff[s:e,];eff_t[1:e,]<-temp$eff[1:e,];lambda[1:e,1:e]<-temp$lambda[1:e,1:e]}

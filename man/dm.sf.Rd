@@ -1,26 +1,31 @@
 \name{dm.sf}
 \alias{dm.sf}
 \title{Distance measure using SF}
-\description{Implements \emph{Luenberger}'s shortage function (radial & non-oriented measure).}
-\usage{dm.sf(xdata, ydata, rts, g, w=NULL, se=0, sg="ssm", date=NULL)}
+\description{Implements \emph{Luenberger}'s shortage (benefit) function (radial & non-oriented measure).}
+\usage{dm.sf(xdata, ydata, rts="crs", g,
+      wd=NULL, se=FALSE, sg="ssm", date=NULL, cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
   \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
-  \item{w}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})}
-  \item{se}{Implements super-efficiency model alike \emph{Anderson & Peterson}'s model if \code{1}}
+  \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})}
+  \item{se}{Implements super-efficiency model alike \emph{Anderson & Peterson}'s model if \code{TRUE}}
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
   \item{date}{Production date (\emph{n} by \emph{1})}
+  \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$eff}}{Efficiency score}

@@ -1,5 +1,5 @@
 roc.dea <-
-function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL){
+function(xdata,ydata,date,t,rts="crs",orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL,cv="convex"){
 
   # Initial checks
   if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
@@ -8,11 +8,13 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
   if(t<=min(date)){stop('t is earlier than dataset.')}
   if(max(date)<t){stop('t is later than dataset.')}
+  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
   
   # Parameters
   xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date) # format input data as matrix
   n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
   o<-matrix(c(1:n),ncol=1) # original data order
+  if(cv=="fdh") rts<-"vrs"
   
   # Sort data ascending order
   x<-matrix(c(xdata[order(date),]),ncol=m);colnames(x)<-colnames(xdata)
@@ -38,7 +40,7 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
   r<-till(unique(d),t)
 
   # DEA internal function
-  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,ncv,env,a,z){
+  dm.dea.internal<-function(xdata,ydata,rts,orientation,se=0,sg,date,ncv,env,a,z,cv){
     
     # Load library
     # library(lpSolveAPI)  
@@ -69,6 +71,9 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
       if(rts=="crs"){set.constr.type(lp.dea,0,1)}
       if(rts=="irs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),">=",1)}
       if(rts=="drs"){add.constraint(lp.dea,c(rep(1,n)),indices=c(1:n),"<=",1)}
+      
+      # Set type
+      if(cv=="fdh"){set.type(lp.dea,1:n,"binary")}
       
       # Input constraints
       for(i in 1:m){
@@ -144,8 +149,8 @@ function(xdata,ydata,date,t,rts,orientation,sg="ssm",ftype="d",ncv=NULL,env=NULL
     d_t<-matrix(d[1:e,],nrow=e)
     
     # Run DEA
-    if(i==r){temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,1,e)}
-    else{temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,s,e)}
+    if(i==r){temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,1,e,cv)}
+    else{temp<-dm.dea.internal(x_t,y_t,rts,orientation,0,sg,d_t,ncv,env,s,e,cv)}
     
     # Save eff_r & eff_t
     if(i==r){eff_r[s:e,]<-temp$eff[s:e,];eff_t[1:e,]<-temp$eff[1:e,];lambda[1:e,1:e]<-temp$lambda[1:e,1:e]}

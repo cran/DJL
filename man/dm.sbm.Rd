@@ -2,12 +2,13 @@
 \alias{dm.sbm}
 \title{Distance measure using SBM}
 \description{Implements \emph{Tone}'s slack-based model (non-radial & (non-)oriented measure).}
-\usage{dm.sbm(xdata, ydata, rts, orientation="n", se=0, sg="ssm", date=NULL)}
+\usage{dm.sbm(xdata, ydata, rts="crs", 
+       orientation="n", se=FALSE, sg="ssm", date=NULL, cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
   \item{rts}{Returns to scale assumption \cr
-    \code{"crs"  }{Constant RTS} \cr  
+    \code{"crs"  }{Constant RTS (default)} \cr  
     \code{"vrs"  }{Variable RTS} \cr
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
@@ -17,13 +18,17 @@
     \code{"i"  }{Input-orientation} \cr
     \code{"o"  }{Output-orientation}
   }
-  \item{se}{Implements super-efficiency model alike \emph{Anderson & Peterson}'s model if \code{1}}
+  \item{se}{Implements super-efficiency model alike \emph{Anderson & Peterson}'s model if \code{TRUE}}
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
     \code{"min"  }{Date-sum minimization (only if \code{date} is defined)}
   }
   \item{date}{Production date (\emph{n} by \emph{1})}
+  \item{cv}{Convexity assumption \cr
+    \code{"convex" }{Convexity holds (default)} \cr
+    \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
+  }
 }
 \value{
   \item{\code{$eff}}{Efficiency score}
