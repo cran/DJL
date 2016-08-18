@@ -43,16 +43,16 @@
 }
 \examples{
 # Load engine dataset
-  df<-dataset.engine.2015
+  df <- dataset.engine.2015
 
 # Subset for forced induction systems
-  fis<-subset(df,grepl("^.C..",df[,8]))
+  fis <- subset(df, grepl("^.C..", df[, 8]))
 
 # Parameters
-  x<-subset(fis,select=4)
-  y<-subset(fis,select=6:7)
-  d<-subset(fis,select=2)
+  x <- subset(fis, select = 4)
+  y <- subset(fis, select = 6 : 7)
+  d <- subset(fis, select = 2)
 
 # Generate an SOA map
-  map.soa.dea(x,y,d,"crs","o")
+  map.soa.dea(x, y, d, "crs", "o")
 }

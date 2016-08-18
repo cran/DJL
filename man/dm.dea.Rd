@@ -61,14 +61,15 @@ Fried, Harold O., CA Knox Lovell, and Shelton S. Schmidt, eds. The measurement o
 \examples{
 # Reproduce Table 3.9 (p.348) in Fried, H.O. et al.(2008)
   # ready
-  x<-matrix(c(8,6,3,10,6,8,8,4,8,4.6,1.9,9,3.6,3.6,9,1.9),ncol=2)
-  y<-matrix(c(8,5,2,9,4.5,4.5,7,2),ncol=1)
-  c<-matrix(c(0,1,0),nrow=1)
-  
+  X <- data.frame(x1 = c(8, 6,   3,   10, 6,   8,   8, 4),
+                  x2 = c(8, 4.6, 1.9, 9,  3.6, 3.6, 9, 1.9))
+  Y <- data.frame(y1 = c(8, 5,   2,   9,  4.5, 4.5, 7, 2))
+  C <- data.frame(x1 = 0, x2 = 1, y1 = 0)
+
   # go
-  data.frame(CRS=dm.dea(x,y,"crs","i")$eff,
-             VRS=dm.dea(x,y,"vrs","i")$eff,
-             CRS_NDF=dm.dea(x,y,"crs","i",ncv=c)$eff,
-             VRS_NDF=dm.dea(x,y,"vrs","i",ncv=c)$eff,
-             row.names=LETTERS[1:nrow(x)])
+  data.frame(ALL_CRS = dm.dea(X, Y, "crs", "i")$eff,
+             ALL_VRS = dm.dea(X, Y, "vrs", "i")$eff,
+             NDF_CRS = dm.dea(X, Y, "crs", "i", ncv = C)$eff,
+             NDF_VRS = dm.dea(X, Y, "vrs", "i", ncv = C)$eff,
+             row.names = LETTERS[1 : 8])
 }

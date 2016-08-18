@@ -1,4 +1,19 @@
 ===================================================================================
+DJL v2.5 (Release date: 2016-08-18)
+===================================================================================
+
+Code>
+1. dm.hdf: hyperbolic distance function added
+2. dm.sf: dual output added / default g set to be xdata*ydata
+3. dm/map.soa.ddf / map.soa/roc/target.arrival.sf: default g set to be xdata*ydata
+
+
+Man>
+1. dm.hdf: hyperbolic distance function added
+2. dm.sf: dual output added / default g set to be xdata*ydata
+3. dm/map.soa.ddf / map.soa/roc/target.arrival.sf: default g set to be xdata*ydata
+
+===================================================================================
 DJL v2.4 (Release date: 2016-07-10)
 ===================================================================================
 

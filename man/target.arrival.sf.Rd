@@ -2,7 +2,7 @@
 \alias{target.arrival.sf}
 \title{Arrival target setting using SF}
 \description{Employs \code{dm.sf} over time to estimate the arrival of known specifications. This function is valid only when multiplicative form of directional vector is used.}
-\usage{target.arrival.sf(xdata, ydata, date, t, rts="crs", g, 
+\usage{target.arrival.sf(xdata, ydata, date, t, rts="crs", g=NULL, 
                   wd=NULL, sg="ssm", ftype="d", cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
@@ -15,7 +15,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
+           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
@@ -55,14 +56,14 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
 \examples{
 # Estimate arrivals of MY2013 hev models
   # Load hev dataset
-  df<-dataset.hev.2013
+  df <- dataset.hev.2013
   
   # ready
-  x<-subset(df,select=3)
-  y<-subset(df,select=4:6)
-  d<-subset(df,select=2)
-  g<-data.frame(x,y)
+  x <- subset(df, select = 3)
+  y <- subset(df, select = 4 : 6)
+  d <- subset(df, select = 2)
+  g <- data.frame(x, y)
   
   # go
-  target.arrival.sf(x,y,d,2012,"vrs",g)$arrival_seg
+  target.arrival.sf(x, y, d, 2012, "vrs", g)$arrival_seg
 }

@@ -1,50 +1,56 @@
 target.arrival.sf <-
-function(xdata,ydata,date,t,rts="crs",g,wd=NULL,sg="ssm",ftype="d",cv="convex"){
+function(xdata, ydata, date, t, rts = "crs", g = NULL,
+                              wd = NULL, sg = "ssm", ftype = "d", cv = "convex"){
   
   # Initial checks
-  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
-  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
-  if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
-  if(t<=min(date)){stop('t is earlier than dataset.')}
-  if(max(date)<=t){stop('t is later than dataset.')}
-  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
+  if(t <= min(date))                                   stop('t is earlier than dataset.')
+  if(max(date) < t)                                    stop('t is later than dataset.')
+  if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
+  if(is.na(match(sg,  c("ssm", "max", "min"))))        stop('sg must be "ssm", "max", or "min".')
+  if(is.na(match(ftype, c("d","s"))))                  stop('ftype must be either "d" or "s".')
+  if(is.na(match(cv,  c("convex", "fdh"))))            stop('cv must be "convex" or "fdh".')
   
   # Parameters
-  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date);g<-as.matrix(g) # format input data as matrix
-  n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(wd)) wd<-matrix(c(0),ncol=s) else wd<-as.matrix(wd)
-  o<-matrix(c(1:n),ncol=1) # original data order
-  if(cv=="fdh") rts<-"vrs"
+  xdata <- as.matrix(xdata)
+  ydata <- as.matrix(ydata)
+  g     <- if(is.null(g)) cbind(xdata, ydata) else as.matrix(g)
+  date  <- if(!is.null(date)) as.matrix(date)
+  n     <- nrow(xdata)
+  m     <- ncol(xdata)
+  s     <- ncol(ydata)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
+  rts   <- ifelse(cv == "fdh", "vrs", rts)
+  o     <- matrix(c(1:n), ncol = 1) # original data order
   
   # Sort data ascending order
-  x<-matrix(c(xdata[order(date),]),ncol=m)
-  y<-matrix(c(ydata[order(date),]),ncol=s)
-  d<-matrix(c(date[order(date),]),ncol=1)
-  g<-matrix(c(g[order(date),]),ncol=m+s)
-  o<-matrix(c(o[order(date),]),ncol=1)
+  x <- matrix(c(xdata[order(date),]), ncol = m)
+  y <- matrix(c(ydata[order(date),]), ncol = s)
+  d <- matrix(c(date[order(date),]), ncol = 1)
+  g <- matrix(c(g[order(date),]), ncol = m + s)
+  o <- matrix(c(o[order(date),]), ncol = 1)
   
   # Data frames
-  eff_t<-array(NA,c(n,1))
-  eff_t_gm<-array(NA,c(n,1)) # Geometric mean for equi-ratio
-  lambda<-array(NA,c(n,n))
-  ed<-array(NA,c(n,1))
-  sl<-array(NA,c(n,1))
-  roc_ind<-array(NA,c(n,1))
-  arrival_avg<-array(NA,c(n,1))
-  arrival_seg<-array(NA,c(n,1))
+  eff_t       <- array(NA, c(n, 1))
+  eff_t_gm    <- array(NA, c(n, 1)) # Geometric mean for equi-ratio
+  lambda      <- array(NA, c(n, n))
+  ed          <- array(NA, c(n, 1))
+  sl          <- array(NA, c(n, 1))
+  roc_ind     <- array(NA, c(n, 1))
+  arrival_avg <- array(NA, c(n, 1))
+  arrival_seg <- array(NA, c(n, 1))
   
   # Subset index
-  till<-function(x,y){
-    t<-0
-    while(x[t+1]<=y&&t<nrow(x)){t<-t+1}
+  till <- function(x, y){
+    t <- 0
+    while(x[t + 1] <= y && t < nrow(x)){t <- t+1}
     return(t)
   }
 
   #Subset till t
-  e<-till(d,t)
-  x_t<-matrix(x[1:e,],nrow=e)
-  y_t<-matrix(y[1:e,],nrow=e)
-  g_t<-matrix(g[1:e,],nrow=e)
+  e   <- till(d, t)
+  x_t <- matrix(x[1:e,], nrow = e)
+  y_t <- matrix(y[1:e,], nrow = e)
+  g_t <- matrix(g[1:e,], nrow = e)
   
   # SF internal function 
   dm.sf.internal<-function(xdata,ydata,rts,g,wd,se=0,sg,date,a,z,cv){
@@ -140,36 +146,42 @@ function(xdata,ydata,date,t,rts="crs",g,wd=NULL,sg="ssm",ftype="d",cv="convex"){
   }
   
   # Loop for eff_t
-  for(i in (e+1):n){
+  for(i in (e + 1):n){
     # Subset till t + each target
-    x_f<-rbind(x_t,x[i,])
-    y_f<-rbind(y_t,y[i,])
-    g_f<-rbind(g_t,g[i,])
+    x_f <- rbind(x_t, x[i,])
+    y_f <- rbind(y_t, y[i,])
+    g_f <- rbind(g_t, g[i,])
     # Run SF
-    temp<-dm.sf.internal(x_f,y_f,rts,g_f,wd,se=1,sg,d,e+1,e+1,cv)
+    temp <- dm.sf.internal(x_f, y_f, rts, g_f, wd, se = 1, sg, d, e + 1, e + 1, cv)
     # Save eff_t
-    eff_t[i,]<-temp$eff[e+1,]
-    lambda[i,1:e]<-temp$lambda[e+1,1:e]
+    eff_t[i,]      <- temp$eff[e + 1,]
+    lambda[i, 1:e] <- temp$lambda[e + 1, 1:e]
   }
 
   # Effective date
-  if(ftype=="d"){for(i in (e+1):n){ed[i,1]<-sum(d[1:e,]*lambda[i,1:e])/sum(lambda[i,1:e])}}
-  if(ftype=="s"){ed[,1]<-t}
+  if(ftype == "d"){for(i in (e + 1):n){ed[i,1] <- sum(d[1:e,] * lambda[i, 1:e]) / sum(lambda[i, 1:e])}}
+  if(ftype == "s"){ed[, 1] <- t}
   
   # Calc iRoC
-  roc<-roc.sf(xdata,ydata,date,t,rts,g,wd,sg,ftype,cv=cv)
-  roc_local<-roc$roc_local;roc_local_bi<-ifelse(is.na(roc_local),0,1);roc_avg<-roc$roc_avg
-  for(i in (e+1):n){roc_ind[i,1]<-sum(roc_local[1:e,]*lambda[i,1:e],na.rm=TRUE)/sum(lambda[i,1:e]*roc_local_bi[1:e,])}
+  roc          <- roc.sf(xdata, ydata, date, t, rts, g, wd, sg, ftype, cv = cv)
+  roc_local    <- roc$roc_local
+  roc_local_bi <- ifelse(is.na(roc_local), 0, 1)
+  roc_avg      <- roc$roc_avg
+  for(i in (e + 1):n){
+    roc_ind[i, 1] <- sum(roc_local[1:e,] * lambda[i, 1:e], na.rm = T) / sum(lambda[i, 1:e] * roc_local_bi[1:e,])
+  }
 
   # Arrival target
-  for(i in (e+1):n){
-    if(abs(eff_t[i,1])>10^-9 && abs(eff_t[i,1])!=Inf && eff_t[i,1]<0){
-      eff_t_gm[i,1]<-((1-eff_t[i,1])/(1+eff_t[i,1]))^0.5 # Geometric mean for equi-ratio
-      arrival_avg[i,1]<-ed[i,1]+log(eff_t_gm[i,1],exp(1))/log(roc_avg,exp(1))
-      arrival_seg[i,1]<-ed[i,1]+log(eff_t_gm[i,1],exp(1))/log(ifelse(roc_ind[i,1]>0,roc_ind[i,1],roc_avg),exp(1))
+  for(i in (e + 1):n){
+    if(abs(eff_t[i, 1]) > 10 ^ -9 && abs(eff_t[i, 1]) != Inf && eff_t[i, 1] < 0){
+      eff_t_gm[i, 1]    <- ((1 - eff_t[i, 1]) / (1 + eff_t[i, 1])) ^ 0.5 # Geometric mean for equi-ratio
+      arrival_avg[i, 1] <- ed[i, 1] + log(eff_t_gm[i, 1], exp(1)) / log(roc_avg, exp(1))
+      arrival_seg[i, 1] <- ed[i, 1] + log(eff_t_gm[i, 1], exp(1)) / log(ifelse(roc_ind[i, 1] > 0, roc_ind[i, 1], roc_avg), exp(1))
       #arrival_seg[i,1]<-ed[i,1]+log(1/eff_t[i,1],exp(1))/log(roc_ind[i,1],exp(1))
     }
   }
-  results<-list(eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_avg=roc_avg,roc_local=roc_local,roc_ind=roc_ind,arrival_avg=arrival_avg,arrival_seg=arrival_seg)
+  results <- list(eff_t = eff_t, lambda_t = lambda, eft_date = ed, 
+                  roc_avg = roc_avg, roc_local = roc_local, roc_ind = roc_ind, 
+                  arrival_avg = arrival_avg, arrival_seg = arrival_seg)
   return(results)    
 }

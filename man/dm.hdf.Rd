@@ -1,8 +1,8 @@
-\name{dm.ddf}
-\alias{dm.ddf}
-\title{Distance measure using DDF}
-\description{Implements \emph{Chambers}' directional distance function (non-radial & non-oriented measure).}
-\usage{dm.ddf(xdata, ydata, rts="crs", g=NULL, 
+\name{dm.hdf}
+\alias{dm.hdf}
+\title{Distance measure using HDF}
+\description{Implements \emph{Fare}'s hyperbolic distance function (semi-radial & non-oriented measure).}
+\usage{dm.hdf(xdata, ydata, rts="crs", 
        wd=NULL, se=FALSE, sg="ssm", date=NULL, cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
@@ -13,8 +13,6 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
-           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})}
   \item{se}{Implements super-efficiency model alike \emph{Anderson & Peterson}'s model if \code{TRUE}}
   \item{sg}{Employs second-stage optimization \cr
@@ -32,15 +30,14 @@
   \item{\code{$eff}}{Efficiency score}
   \item{\code{$lambda}}{Intensity vector}
   \item{\code{$mu}}{Secondary intensity vector for weak disposability under VRS}
-  \item{\code{$beta}}{Input reduction factor}
-  \item{\code{$gamma}}{Output augmentation factor}
   \item{\code{$xslack}}{Input slack}
   \item{\code{$yslack}}{Output slack}
+  \item{\code{$iteration}}{The number of iteration to obtain the hyperbolic efficiency score}
 }
 \references{
-Chambers, Robert G., Yangho Chung, and Rolf Fare. "Profit, directional distance functions, and Nerlovian efficiency." \emph{Journal of optimization theory and applications} 98.2 (1998): 351~364.
+Fare, R., Shawna Grosskopf, and CA Knox Lovell. The Measurement of Efficiency of Production. \emph{Boston: Kulwer-Nijhoff} (1985).
 
-Fare, Rolf, and Shawna Grosskopf. "Directional distance functions and slacks-based measures of efficiency." \emph{European journal of operational research} 200.1 (2010): 320~322.
+Fare, Rolf, et al. "Estimating the hyperbolic distance function: A directional distance function approach." \emph{European Journal of Operational Research} 254.1 (2016): 312~319.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
@@ -50,18 +47,16 @@ Fare, Rolf, and Shawna Grosskopf. "Directional distance functions and slacks-bas
   \code{\link{dm.sf}} Distance measure using SF
 }
 \examples{
-# Additive form directional distance function
+# Reproduce Table 2 in Fare et al.(2016)
   # ready
-  x <- matrix(c(5, 1, 4), ncol = 1)
-  y <- matrix(c(8, 3, 5, 6, 4, 1), ncol = 2)
-  g <- matrix(c(1), nrow = 3, ncol = 3) 
-  w <- matrix(c(1, 0), ncol = 2)
-  # go
-  dm.ddf(x, y, "crs", g, w)
+  x <- data.frame(x1 = c(2, 4, 9, 6.5, 10, 6, 9))
+  y <- data.frame(y1 = c(3, 7, 10, 8.5, 4, 2, 8))
 
-# Multiplicative form directional distance function
-  # ready
-  g <- cbind(x, y)
   # go
-  dm.ddf(x, y, "crs", g, w)
+  sf  <- dm.sf (x, y, "vrs")$eff
+  hdf <- dm.hdf(x, y, "vrs")$eff
+  matrix(t(cbind(sf, hdf)), 2, 7, 
+         dimnames = list(c("SF", "HDF"), 
+                         paste0("DMU_", c(letters[1:4], "o", "p", "q")))) 
+
 }

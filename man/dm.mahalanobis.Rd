@@ -12,9 +12,9 @@
   \item{p}{Percentage to which outlier point(s) is noted (default of 10)}
   \item{plot}{Switch for boxplot(s)}
   \item{v.index}{Numeric vector indicating column(s) to be printed in the boxplot.
-        Default value of NULL will present all.}
+        Default value of \code{NULL} will present all.}
   \item{layout}{Numeric vector indicating dimension of boxplots.
-        Default value of NULL will find an optimal layout.}
+        Default value of \code{NULL} will find an optimal layout.}
 }
 \value{
   \item{\code{$dist}}{\code{Mahalanobis} distance from \code{from}}
@@ -26,8 +26,8 @@
 \author{Dong-Joon Lim, PhD}
 \examples{
 # Generate a sample dataframe
-df<-data.frame(replicate(6,sample(0:100,50)))
+df <- data.frame(replicate(6, sample(0 : 100, 50)))
 
 # go
-dm.mahalanobis(df,plot=TRUE)
+dm.mahalanobis(df, plot = TRUE)
 }

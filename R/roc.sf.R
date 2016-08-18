@@ -1,45 +1,51 @@
 roc.sf <-
-function(xdata,ydata,date,t,rts="crs",g,wd=NULL,sg="ssm",ftype="d",cv="convex"){
+function(xdata, ydata, date, t, rts = "crs", g = NULL,
+                   wd = NULL, sg = "ssm", ftype = "d", cv = "convex"){
   
   # Initial checks
-  if(is.na(match(rts,c("crs","vrs","irs","drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
-  if(is.na(match(sg,c("ssm","max","min")))){stop('sg must be "ssm", "max", or "min".')}
-  if(is.na(match(ftype,c("d","s")))){stop('ftype must be either "d" or "s".')}
-  if(t<=min(date)){stop('t is earlier than dataset.')}
-  if(max(date)<t){stop('t is later than dataset.')}
-  if(is.na(match(cv,c("convex","fdh")))){stop('cv must be "convex" or "fdh".')}
+  if(t <= min(date))                                   stop('t is earlier than dataset.')
+  if(max(date) < t)                                    stop('t is later than dataset.')
+  if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
+  if(is.na(match(sg,  c("ssm", "max", "min"))))        stop('sg must be "ssm", "max", or "min".')
+  if(is.na(match(ftype, c("d","s"))))                  stop('ftype must be either "d" or "s".')
+  if(is.na(match(cv,  c("convex", "fdh"))))            stop('cv must be "convex" or "fdh".')
   
   # Parameters
-  xdata<-as.matrix(xdata);ydata<-as.matrix(ydata);date<-as.matrix(date);g<-as.matrix(g) # format input data as matrix
-  n<-nrow(xdata); m<-ncol(xdata); s<-ncol(ydata)
-  if(is.null(wd)) wd<-matrix(c(0),ncol=s) else wd<-as.matrix(wd)
-  o<-matrix(c(1:n),ncol=1) # original data order
-  if(cv=="fdh") rts<-"vrs"
+  xdata <- as.matrix(xdata)
+  ydata <- as.matrix(ydata)
+  g     <- if(is.null(g)) cbind(xdata, ydata) else as.matrix(g)
+  date  <- if(!is.null(date)) as.matrix(date)
+  n     <- nrow(xdata)
+  m     <- ncol(xdata)
+  s     <- ncol(ydata)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
+  rts   <- ifelse(cv == "fdh", "vrs", rts)
+  o     <- matrix(c(1:n), ncol = 1) # original data order
   
   # Sort data ascending order
-  x<-matrix(c(xdata[order(date),]),ncol=m)
-  y<-matrix(c(ydata[order(date),]),ncol=s)
-  d<-matrix(c(date[order(date),]),ncol=1)
-  g<-matrix(c(g[order(date),]),ncol=m+s)
-  o<-matrix(c(o[order(date),]),ncol=1)
+  x <- matrix(c(xdata[order(date),]), ncol = m)
+  y <- matrix(c(ydata[order(date),]), ncol = s)
+  d <- matrix(c(date[order(date),]), ncol = 1)
+  g <- matrix(c(g[order(date),]), ncol = m + s)
+  o <- matrix(c(o[order(date),]), ncol = 1)
   
   # Data frames
-  eff_r<-array(NA,c(n,1))
-  eff_t<-array(NA,c(n,1))
-  eff_t_gm<-array(NA,c(n,1)) # Geometric mean for equi-ratio
-  lambda<-array(NA,c(n,n))
-  ed<-array(NA,c(n,1))
-  sl<-array(NA,c(n,1))
-  roc<-array(NA,c(n,1))
-  local_roc<-array(NA,c(n,1))
+  eff_r     <- array(NA, c(n,1))
+  eff_t     <- array(NA, c(n,1))
+  eff_t_gm  <- array(NA, c(n,1)) # Geometric mean for equi-ratio
+  lambda    <- array(NA, c(n,n))
+  ed        <- array(NA, c(n,1))
+  sl        <- array(NA, c(n,1))
+  roc       <- array(NA, c(n,1))
+  local_roc <- array(NA, c(n,1))
   
   # Subset index
-  till<-function(x,y){
-    t<-0
-    while(x[t+1]<=y&&t<nrow(x)){t<-t+1}
+  till <- function(x, y){
+    t <- 0
+    while(x[t + 1] <= y && t < nrow(x)){t <- t+1}
     return(t)
   }
-  r<-till(unique(d),t)
+  r <- till(unique(d), t)
   
   # SF internal function 
   dm.sf.internal<-function(xdata,ydata,rts,g,wd,se=0,sg,date,a,z,cv){
@@ -137,57 +143,71 @@ function(xdata,ydata,date,t,rts="crs",g,wd=NULL,sg="ssm",ftype="d",cv="convex"){
   # Loop for eff_r & eff_t
   for(i in 1:r){
     # Subset indices for each unique year
-    if(i==1){s<-1}else{s<-till(d,unique(d)[i-1])+1}
-    e<-till(d,unique(d)[i])
-    x_t<-matrix(x[1:e,],nrow=e)
-    y_t<-matrix(y[1:e,],nrow=e)
-    d_t<-matrix(d[1:e,],nrow=e)
-    g_t<-matrix(g[1:e,],nrow=e)
+    s   <- ifelse(i == 1, 1, till(d, unique(d)[i - 1]) + 1)
+    e   <- till(d, unique(d)[i])
+    x_t <- matrix(x[1:e,], nrow = e)
+    y_t <- matrix(y[1:e,], nrow = e)
+    d_t <- matrix(d[1:e,], nrow = e)
+    g_t <- matrix(g[1:e,], nrow = e)
     
     # Run SF
-    if(i==r){temp<-dm.sf.internal(x_t,y_t,rts,g_t,wd,0,sg,d_t,1,e,cv)}
-    else{temp<-dm.sf.internal(x_t,y_t,rts,g_t,wd,0,sg,d_t,s,e,cv)}
+    if(i == r){
+      temp <- dm.sf.internal(x_t, y_t, rts, g_t, wd, 0, sg, d_t, 1, e, cv)
+    }else{
+      temp <- dm.sf.internal(x_t, y_t, rts, g_t, wd, 0, sg, d_t, s, e, cv)
+    }
     
     # Save eff_r & eff_t
-    if(i==r){eff_r[s:e,]<-temp$eff[s:e,];eff_t[1:e,]<-temp$eff[1:e,];lambda[1:e,1:e]<-temp$lambda[1:e,1:e]}
-    else{eff_r[s:e,]<-temp$eff[s:e,]}
+    if(i == r){
+      eff_r[s:e,]      <- temp$eff[s:e,]
+      eff_t[1:e,]      <- temp$eff[1:e,]
+      lambda[1:e, 1:e] <- temp$lambda[1:e, 1:e]
+    }else{
+      eff_r[s:e,]      <- temp$eff[s:e,]
+    }
   }
   
   # Effective date
-  if(ftype=="d"){
-    for(i in 1:e){ed[i,1]<-sum(d[1:e,]*lambda[i,1:e]);sl[i,1]<-sum(lambda[i,1:e])}
-    ed<-ed/sl
+  if(ftype == "d"){
+    for(i in 1:e){
+      ed[i,1] <- sum(d[1:e,] * lambda[i, 1:e])
+      sl[i,1] <- sum(lambda[i, 1:e])
+    }
+    ed <- ed / sl
   }
-  if(ftype=="s"){ed[,1]<-t}
+  if(ftype == "s"){ed[, 1] <- t}
 
   # RoC
   for(i in 1:e){
-    if(round(eff_r[i,1],8)==0 && round(eff_t[i,1],8)!=0 && ed[i,1]>d[i,1]){
-      eff_t_gm[i,1]<-((1+eff_t[i,1])/(1-eff_t[i,1]))^0.5 # Geometric mean for equi-ratio
-      roc[i,1]<-(eff_t_gm[i,1])^(1/(ed[i,1]-d[i,1]))
+    if(round(eff_r[i, 1], 8) == 0 && round(eff_t[i, 1], 8) != 0 && ed[i, 1] > d[i, 1]){
+      eff_t_gm[i, 1] <- ((1 + eff_t[i, 1]) / (1 - eff_t[i, 1])) ^ 0.5 # Geometric mean for equi-ratio
+      roc[i,1]       <- (eff_t_gm[i, 1]) ^ (1 / (ed[i, 1] - d[i, 1]))
     }
   }
   
   # RoC filter
-  roc[!is.na(roc[,1]) & roc[,1]>10,1]<-NA
-  avgroc<-mean(roc,na.rm=TRUE)
+  roc[!is.na(roc[, 1]) & roc[, 1] > 10, 1] <- NA
+  avgroc <- mean(roc, na.rm = T)
   
   # RoC segmentation
-  g_b<-array(0,c(n,1))
-  g_b[!is.na(roc[,1]),1]<-1
+  g_b                     <- array(0, c(n, 1))
+  g_b[!is.na(roc[,1]), 1] <- 1
   for(i in 1:e){
     # if(abs(eff_t[i,1]-1)<10^-9){local_roc[i,1]<-avgroc}
-    if(sum(lambda[,i]*roc[,1],na.rm=TRUE)>0){local_roc[i,1]<-sum(lambda[,i]*roc[,1],na.rm=TRUE)/sum(lambda[,i]*g_b[,1],na.rm=TRUE)}
+    if(sum(lambda[, i] * roc[, 1], na.rm = T) > 0){
+      local_roc[i, 1] <- sum(lambda[, i] * roc[, 1], na.rm = T) / sum(lambda[, i] * g_b[, 1], na.rm = T)
+    }
   }
   
   # Sort results back to original order
-  eff_r<-matrix(c(eff_r[order(o),]),ncol=1)
-  eff_t<-matrix(c(eff_t[order(o),]),ncol=1)
-  lambda<-matrix(c(lambda[order(o),]),ncol=n)
-  ed<-matrix(c(ed[order(o),]),ncol=1)
-  roc<-matrix(c(roc[order(o),]),ncol=1)
-  local_roc<-matrix(c(local_roc[order(o),]),ncol=1)
+  eff_r     <- matrix(c(eff_r[order(o),]), ncol = 1)
+  eff_t     <- matrix(c(eff_t[order(o),]), ncol = 1)
+  lambda    <- matrix(c(lambda[order(o),]), ncol = n)
+  ed        <- matrix(c(ed[order(o),]), ncol = 1)
+  roc       <- matrix(c(roc[order(o),]), ncol = 1)
+  local_roc <- matrix(c(local_roc[order(o),]), ncol = 1)
   
-  results<-list(eff_r=eff_r,eff_t=eff_t,lambda_t=lambda,eft_date=ed,roc_past=roc,roc_local=local_roc,roc_avg=avgroc)
+  results <- list(eff_r = eff_r, eff_t = eff_t, lambda_t = lambda, eft_date = ed,
+                  roc_past = roc, roc_local = local_roc, roc_avg = avgroc)
   return(results)
 }

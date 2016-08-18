@@ -2,7 +2,7 @@
 \alias{map.soa.sf}
 \title{SOA mapping using SF}
 \description{Employs \code{dm.sf} over time to generate a state-of-the-art map.}
-\usage{map.soa.sf(xdata, ydata, date, rts="crs", g,
+\usage{map.soa.sf(xdata, ydata, date, rts="crs", g=NULL,
            wd=NULL, sg="ssm", cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
@@ -14,7 +14,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
+           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})}
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
@@ -43,18 +44,18 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
 \examples{
 # Reproduce Table 2 in Lim, D-J. (2015)
   # Load engine dataset
-    df<-dataset.engine.2015
+    df <- dataset.engine.2015
   
   # Subset for 4 cylinder engines
-    fce<-subset(df,df[,3]==4)
+    fce <- subset(df, df[, 3] == 4)
 
   # Parameters
-    x<-subset(fce,select=4)
-    y<-subset(fce,select=5:7)
-    d<-subset(fce,select=2)
-    g<-data.frame(0,y)
-    w<-matrix(c(1,0,0),ncol=3)
+    x <- subset(fce, select = 4)
+    y <- subset(fce, select = 5 : 7)
+    d <- subset(fce, select = 2)
+    g <- data.frame(0, y)
+    w <- matrix(c(1, 0, 0), ncol = 3)
 
   # Generate an SOA map
-    map.soa.sf(x,y,d,"crs",g,w,mk="eff")
+    map.soa.sf(x, y, d, "crs", g, w, mk = "eff")
 }

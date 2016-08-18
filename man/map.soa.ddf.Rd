@@ -2,7 +2,7 @@
 \alias{map.soa.ddf}
 \title{SOA mapping using DDF}
 \description{Employs \code{dm.ddf} over time to generate a state-of-the-art map.}
-\usage{map.soa.ddf(xdata, ydata, date, rts="crs", g, 
+\usage{map.soa.ddf(xdata, ydata, date, rts="crs", g=NULL, 
             wd=NULL, sg="ssm", cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
@@ -14,7 +14,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
+           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})}
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
@@ -39,17 +40,17 @@
 }
 \examples{
 # Load engine dataset
-  df<-dataset.engine.2015
+  df <- dataset.engine.2015
 
 # Subset for forced induction systems
-  fis<-subset(df,grepl("^.C..",df[,8]))
+  fis <- subset(df, grepl("^.C..", df[, 8]))
 
 # Parameters
-  x<-subset(fis,select=4)
-  y<-subset(fis,select=6:7)
-  d<-subset(fis,select=2)
-  g<-matrix(c(1),nrow=nrow(x),ncol=3)
+  x <- subset(fis, select = 4)
+  y <- subset(fis, select = 6 : 7)
+  d <- subset(fis, select = 2)
+  g <- matrix(c(1), nrow = nrow(x), ncol = 3)
 
 # Generate an SOA map
-  map.soa.ddf(x,y,d,"crs",g)
+  map.soa.ddf(x, y, d, "crs", g)
 }

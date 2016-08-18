@@ -7,6 +7,7 @@ importFrom("graphics", "axis", "grid", "lines", "plot", "points")
 importFrom("stats", "complete.cases", "sd")
 export(dm.ddf,
        dm.dea,
+       dm.hdf,
        dm.mahalanobis,
        dm.sbm,
        dm.sf,

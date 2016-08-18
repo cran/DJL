@@ -2,7 +2,7 @@
 \alias{roc.sf}
 \title{Rate of change (RoC) calculation using SF}
 \description{Employs \code{dm.sf} over time to calculate RoCs. This function is valid only when multiplicative form of directional vector is used.}
-\usage{roc.sf(xdata, ydata, date, t, rts="crs", g,
+\usage{roc.sf(xdata, ydata, date, t, rts="crs", g=NULL,
        wd=NULL, sg="ssm", ftype="d", cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
@@ -15,7 +15,8 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})}
+  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
+           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
@@ -53,18 +54,18 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
 \examples{
 # Reproduce Mercedes-Benz CLA45 AMG's local RoC in Table 5 in Lim, D-J. (2015)
   # Load engine dataset
-    df<-dataset.engine.2015
+    df <- dataset.engine.2015
   
   # Subset for 4 cylinder engines
-    fce<-subset(df,df[,3]==4)
+    fce <- subset(df, df[, 3] == 4)
     
   # Parameters
-    x<-subset(fce,select=4)
-    y<-subset(fce,select=5:7)
-    d<-subset(fce,select=2)
-    g<-as.matrix(data.frame(0,y))
-    w<-matrix(c(1,0,0),ncol=3)
+    x <- subset(fce, select = 4)
+    y <- subset(fce, select = 5 : 7)
+    d <- subset(fce, select = 2)
+    g <- as.matrix(data.frame(0, y))
+    w <- matrix(c(1, 0, 0), ncol = 3)
 
   # Calc local Roc
-    roc.sf(x,y,d,2014,"crs",g,w,"min")$roc_local[348,]
+    roc.sf(x, y, d, 2014, "crs", g, w, "min")$roc_local[348, ]
 }
