@@ -2,8 +2,8 @@
 \alias{map.soa.ddf}
 \title{SOA mapping using DDF}
 \description{Employs \code{dm.ddf} over time to generate a state-of-the-art map.}
-\usage{map.soa.ddf(xdata, ydata, date, rts="crs", g=NULL, 
-            wd=NULL, sg="ssm", cv="convex", mk="dmu")}
+\usage{map.soa.ddf(xdata, ydata, date, 
+            rts="crs", g=NULL, wd=NULL, sg="ssm", cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -35,8 +35,9 @@
 \seealso{
   \code{\link{map.soa.ddf}} SOA mapping using DDF \cr
   \code{\link{map.soa.dea}} SOA mapping using DEA \cr
+  \code{\link{map.soa.hdf}} SOA mapping using HDF \cr
   \code{\link{map.soa.sbm}} SOA mapping using SBM \cr
-  \code{\link{map.soa.sf}} SOA mapping using SF \cr
+  \code{\link{map.soa.sf}} SOA mapping using SF
 }
 \examples{
 # Load engine dataset

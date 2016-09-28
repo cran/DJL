@@ -55,6 +55,7 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
 \seealso{
   \code{\link{dm.dea}} Distance measure using DEA \cr
   \code{\link{roc.dea}} RoC calculation using DEA \cr
+  \code{\link{map.soa.dea}} SOA mapping using DEA \cr
   \code{\link{target.arrival.dea}} Arrival target setting using DEA \cr
   \code{\link{target.spec.dea}} Spec target setting using DEA
 }

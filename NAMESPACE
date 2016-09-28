@@ -5,6 +5,7 @@ importFrom("stats", "cov", "fivenum", "mahalanobis")
 importFrom("grDevices", "colorRampPalette")
 importFrom("graphics", "axis", "grid", "lines", "plot", "points")
 importFrom("stats", "complete.cases", "sd")
+importFrom("utils", "tail")
 export(dm.ddf,
        dm.dea,
        dm.hdf,
@@ -15,11 +16,14 @@ export(dm.ddf,
        map.corr,
        map.soa.ddf,
        map.soa.dea,
+       map.soa.hdf,
        map.soa.sbm,
        map.soa.sf,
        roc.dea,
+       roc.hdf,
        roc.sf,
        target.arrival.dea,
+       target.arrival.hdf,
        target.arrival.sf,
        target.spec.dea
        )

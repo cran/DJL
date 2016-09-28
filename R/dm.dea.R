@@ -1,13 +1,14 @@
 dm.dea <-
 function(xdata, ydata, rts = "crs", orientation, 
-                   se = FALSE, sg = "ssm", date = NULL, ncv = NULL, env = NULL, cv = "convex"){
+                   se = FALSE, sg = "ssm", date = NULL, ncv = NULL, env = NULL, cv = "convex", o = NULL){
 
   # Initial checks
-  if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))){stop('rts must be "crs", "vrs", "irs", or "drs".')}
-  if(is.na(match(orientation, c("i", "o"))))          {stop('orientation must be either "i" or "o".')}
-  if(is.na(match(se, c(0, 1, FALSE, TRUE))))          {stop('se must be either 0(FALSE) or 1(TRUE).')}
-  if(is.na(match(sg, c("ssm", "max", "min"))))        {stop('sg must be "ssm", "max", or "min".')}
-  if(is.na(match(cv, c("convex", "fdh"))))            {stop('cv must be "convex" or "fdh".')}
+  if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
+  if(is.na(match(orientation, c("i", "o"))))           stop('orientation must be either "i" or "o".')
+  if(is.na(match(se, c(0, 1, FALSE, TRUE))))           stop('se must be either 0(FALSE) or 1(TRUE).')
+  if(is.na(match(sg, c("ssm", "max", "min"))))         stop('sg must be "ssm", "max", or "min".')
+  if(is.na(match(cv, c("convex", "fdh"))))             stop('cv must be "convex" or "fdh".')
+  if(!is.null(o) && !all(o <= nrow(xdata)))            stop('o must be element(s) of n.')
   
   # Load library
   # library(lpSolveAPI)  
@@ -23,6 +24,7 @@ function(xdata, ydata, rts = "crs", orientation,
   env   <- if(!is.null(env)) as.matrix(env)
   se    <- ifelse(is.logical(se), ifelse(isTRUE(se), 1, 0), se)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
+  o     <- if(is.null(o)) c(1:n) else as.vector(o)
   
   # Data frames
   results.efficiency <- matrix(NA, nrow = n, ncol = 1)
@@ -34,7 +36,7 @@ function(xdata, ydata, rts = "crs", orientation,
   results.w          <- matrix(NA, nrow = n, ncol = 1)
 
   # LP
-  for (k in 1:n){
+  for (k in o){
     # Declare LP
     lp.dea <- make.lp(0, n + 1 + m + s) # lambda+efficiency+xslack+yslack
     

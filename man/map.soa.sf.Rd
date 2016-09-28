@@ -2,8 +2,8 @@
 \alias{map.soa.sf}
 \title{SOA mapping using SF}
 \description{Employs \code{dm.sf} over time to generate a state-of-the-art map.}
-\usage{map.soa.sf(xdata, ydata, date, rts="crs", g=NULL,
-           wd=NULL, sg="ssm", cv="convex", mk="dmu")}
+\usage{map.soa.sf(xdata, ydata, date, 
+           rts="crs", g=NULL, wd=NULL, sg="ssm", cv="convex", mk="dmu")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -38,8 +38,9 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
 \seealso{
   \code{\link{map.soa.ddf}} SOA mapping using DDF \cr
   \code{\link{map.soa.dea}} SOA mapping using DEA \cr
+  \code{\link{map.soa.hdf}} SOA mapping using HDF \cr
   \code{\link{map.soa.sbm}} SOA mapping using SBM \cr
-  \code{\link{map.soa.sf}} SOA mapping using SF \cr
+  \code{\link{map.soa.sf}} SOA mapping using SF
 }
 \examples{
 # Reproduce Table 2 in Lim, D-J. (2015)

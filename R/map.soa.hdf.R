@@ -1,47 +1,45 @@
-map.soa.ddf <-
-function(xdata, ydata, date, rts = "crs", g = NULL,
+map.soa.hdf <-
+function(xdata, ydata, date, rts = "crs",
                         wd = NULL, sg = "ssm", cv = "convex", mk = "dmu"){
 
   # Initial checks
   if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
-  if(is.na(match(sg,  c("ssm", "max", "min"))))        stop('sg must be "ssm", "max", or "min".')
-  if(is.na(match(cv,  c("convex", "fdh"))))            stop('cv must be "convex" or "fdh".')
-  if(is.na(match(mk,  c("dmu", "eff"))))               stop('mk must be either "dmu" or "eff".')  
+  if(is.na(match(sg, c("ssm", "max", "min"))))         stop('sg must be "ssm", "max", or "min".')
+  if(is.na(match(cv, c("convex", "fdh"))))             stop('cv must be "convex" or "fdh".')
+  if(is.na(match(mk, c("dmu", "eff"))))                stop('mk must be either "dmu" or "eff".')
 
   # Parameters
   xdata <- as.matrix(xdata)
   ydata <- as.matrix(ydata)
-  date  <- as.matrix(date)
-  g     <- if(is.null(g)) cbind(xdata, ydata) else as.matrix(g)
+  date  <- if(!is.null(date)) as.matrix(date)
   n     <- nrow(xdata)
   m     <- ncol(xdata)
   s     <- ncol(ydata)
-  o     <- matrix(c(1:n), ncol = 1) # original data order
   rts   <- ifelse(cv == "fdh", "vrs", rts)
+  o     <- matrix(c(1:n), ncol = 1) # original data order
   ud    <- sort(unique(date))
   l     <- length(ud)
   
   # Sort data ascending order
-  x <- xdata[order(date),, drop = F]
-  y <- ydata[order(date),, drop = F]
-  d <- date [order(date),, drop = F]
-  g <- g    [order(date),, drop = F]
-  o <- o    [order(date),, drop = F]
+  x   <- xdata[order(date),, drop = F]
+  y   <- ydata[order(date),, drop = F]
+  d   <- date [order(date),, drop = F]
+  o   <- o    [order(date),, drop = F]
   
   # Map frame
   map.soa <- matrix(NA, n, l, dimnames = list(NULL, ud)) 
-  
+
   # Generate the map
   for(i in ud){
     # run
-    ddf.t <- dm.ddf(subset(x, d <= i), subset(y, d <= i), rts, subset(g, d <= i), 
+    hdf.t <- dm.hdf(subset(x, d <= i), subset(y, d <= i), rts, 
                     wd, 0, sg, subset(d, d <= i), cv)
     
     # SOA index
-    #id.soa <- which(round(ddf.t$eff, 8) == 0) # if slacks are not concerned
-    id.soa <- which(round(ddf.t$eff, 8) == 0 & 
-                      rowSums(cbind(round(ddf.t$xslack, 8), 
-                                    round(ddf.t$yslack, 8))) == 0)
+    #id.soa <- which(round(hdf.t$eff, 8) == 1) # if slacks are not concerned
+    id.soa <- which(round(hdf.t$eff, 8) == 1 & 
+                    rowSums(cbind(round(hdf.t$xslack, 8), 
+                                  round(hdf.t$yslack, 8))) == 0)
     
     # Mapping
     if(mk == "dmu"){
@@ -60,7 +58,7 @@ function(xdata, ydata, date, rts = "crs", g = NULL,
       }
     }else{
       gsoa <- if(i == ud[1]) id.soa else union(gsoa, id.soa)
-      map.soa[1:length(gsoa), which(ud == i)] <- ddf.t$eff[gsoa,]
+      map.soa[1:length(gsoa), which(ud == i)] <- hdf.t$eff[gsoa,]
     }
   }
   

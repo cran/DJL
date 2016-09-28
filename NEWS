@@ -1,4 +1,26 @@
 ===================================================================================
+DJL v2.6 (Release date: 2016-09-27)
+===================================================================================
+
+Code>
+1. dm.ddf/dea/hdf/sbm/sf: argument 'o' added
+2. dm.hdf: consistency checking simplified using argument 'o'
+3. dm.ddf/sf: weak disposability bug fixed
+4. roc.dea/df: overall code simplied using argument 'o' with matrix operation
+5. map.soa.ddf/dea/sbm/sf: overall code simplied with matrix operation
+6. map.soa.hdf: new feature added
+7. roc.hdf: new feature added
+8. target.arrival.hdf: new feature added
+9. target.spec.dea: argument 'bound' added
+
+Man>
+1. dm.ddf/dea/hdf/sbm/sf: argument 'o' added
+2. map.soa.hdf: new feature added
+3. roc.hdf: new feature added
+4. target.arrival.hdf: new feature added
+5. target.spec.dea: argument 'bound' added
+
+===================================================================================
 DJL v2.5 (Release date: 2016-08-18)
 ===================================================================================
 
@@ -12,6 +34,7 @@ Man>
 1. dm.hdf: hyperbolic distance function added
 2. dm.sf: dual output added / default g set to be xdata*ydata
 3. dm/map.soa.ddf / map.soa/roc/target.arrival.sf: default g set to be xdata*ydata
+
 
 ===================================================================================
 DJL v2.4 (Release date: 2016-07-10)

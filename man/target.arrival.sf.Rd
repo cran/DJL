@@ -49,9 +49,10 @@ Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for n
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
-  \code{\link{dm.sf}} Distance measure using DEA \cr
-  \code{\link{roc.sf}} RoC calculation using DEA \cr
-  \code{\link{target.arrival.dea}} Arrival target setting using DEA
+  \code{\link{dm.sf}} Distance measure using SF \cr
+  \code{\link{roc.sf}} RoC calculation using SF \cr
+  \code{\link{map.soa.sf}} SOA mapping using SF \cr
+  \code{\link{target.arrival.sf}} Arrival target setting using SF
 }
 \examples{
 # Estimate arrivals of MY2013 hev models

@@ -3,7 +3,7 @@
 \title{Distance measure using DEA}
 \description{Implements \emph{Charnes & Cooper}'s data envelopment analysis (radial & oriented measure).}
 \usage{dm.dea(xdata, ydata, rts="crs", orientation,
-       se=FALSE, sg="ssm", date=NULL, ncv=NULL, env=NULL, cv="convex")}
+       se=FALSE, sg="ssm", date=NULL, ncv=NULL, env=NULL, cv="convex", o=NULL)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -30,6 +30,8 @@
     \code{"convex" }{Convexity holds (default)} \cr
     \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
+  \item{o}{DMU index to calc. \code{NULL}(default) will calc for all}
+
 }
 \value{
   \item{\code{$eff}}{Efficiency score}
@@ -55,6 +57,7 @@ Fried, Harold O., CA Knox Lovell, and Shelton S. Schmidt, eds. The measurement o
 \seealso{
   \code{\link{dm.ddf}} Distance measure using DDF \cr
   \code{\link{dm.dea}} Distance measure using DEA \cr
+  \code{\link{dm.hdf}} Distance measure using HDF \cr
   \code{\link{dm.sbm}} Distance measure using SBM \cr
   \code{\link{dm.sf}} Distance measure using SF
 }

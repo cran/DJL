@@ -3,7 +3,7 @@
 \title{Distance measure using HDF}
 \description{Implements \emph{Fare}'s hyperbolic distance function (semi-radial & non-oriented measure).}
 \usage{dm.hdf(xdata, ydata, rts="crs", 
-       wd=NULL, se=FALSE, sg="ssm", date=NULL, cv="convex")}
+       wd=NULL, se=FALSE, sg="ssm", date=NULL, cv="convex", o=NULL)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -25,6 +25,7 @@
     \code{"convex" }{Convexity holds (default)} \cr
     \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
+  \item{o}{DMU index to calc. \code{NULL}(default) will calc for all}
 }
 \value{
   \item{\code{$eff}}{Efficiency score}
@@ -43,6 +44,7 @@ Fare, Rolf, et al. "Estimating the hyperbolic distance function: A directional d
 \seealso{
   \code{\link{dm.ddf}} Distance measure using DDF \cr
   \code{\link{dm.dea}} Distance measure using DEA \cr
+  \code{\link{dm.hdf}} Distance measure using HDF \cr
   \code{\link{dm.sbm}} Distance measure using SBM \cr
   \code{\link{dm.sf}} Distance measure using SF
 }

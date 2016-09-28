@@ -1,9 +1,9 @@
-\name{roc.sf}
-\alias{roc.sf}
-\title{Rate of change (RoC) calculation using SF}
-\description{Employs \code{dm.sf} over time to calculate RoCs. This function is valid only when multiplicative form of directional vector is used.}
-\usage{roc.sf(xdata, ydata, date, t, 
-       rts="crs", g=NULL, wd=NULL, sg="ssm", ftype="d", cv="convex")}
+\name{roc.hdf}
+\alias{roc.hdf}
+\title{Rate of change (RoC) calculation using HDF}
+\description{Employs \code{dm.hdf} over time to calculate RoCs.}
+\usage{roc.hdf(xdata, ydata, date, t,
+        rts="crs", wd=NULL, sg="ssm", ftype="d", cv="convex")}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -15,8 +15,6 @@
     \code{"irs"  }{Increasing RTS} \cr
     \code{"drs"  }{Decreasing RTS}
   }
-  \item{g}{Directional vector indicating a measurement direction (\emph{n} by \emph{(m+s)})\cr
-           By default (\code{NULL}), \code{xdata} & \code{ydata} will be used}
   \item{wd}{Weak disposability vector indicating (an) undesirable output(s) (\emph{1} by \emph{s})} 
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
@@ -27,7 +25,7 @@
     \code{"d"  }{Dynamic frontier (default)} \cr  
     \code{"s"  }{Static frontier}
   }
-    \item{cv}{Convexity assumption \cr
+  \item{cv}{Convexity assumption \cr
     \code{"convex" }{Convexity holds (default)} \cr
     \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
@@ -46,26 +44,24 @@ D.-J. Lim,  Internal combustion engine race: naturally aspirated vs turbo/super-
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
-  \code{\link{dm.sf}} Distance measure using SF \cr
-  \code{\link{roc.sf}} RoC calculation using SF \cr
-  \code{\link{map.soa.sf}} SOA mapping using SF \cr
-  \code{\link{target.arrival.sf}} Arrival target setting using SF
+  \code{\link{dm.hdf}} Distance measure using HDF \cr
+  \code{\link{roc.hdf}} RoC calculation using HDF \cr
+  \code{\link{map.soa.hdf}} SOA mapping using HDF \cr
+  \code{\link{target.arrival.hdf}} Arrival target setting using HDF
 }
 \examples{
-# Reproduce Mercedes-Benz CLA45 AMG's local RoC in Table 5 in Lim, D-J. (2015)
-  # Load engine dataset
-    df <- dataset.engine.2015
-  
-  # Subset for 4 cylinder engines
-    fce <- subset(df, df[, 3] == 4)
-    
-  # Parameters
-    x <- subset(fce, select = 4)
-    y <- subset(fce, select = 5 : 7)
-    d <- subset(fce, select = 2)
-    g <- as.matrix(data.frame(0, y))
-    w <- matrix(c(1, 0, 0), ncol = 3)
+# Load engine dataset
+  df <- dataset.engine.2015
 
-  # Calc local Roc
-    roc.sf(x, y, d, 2014, "crs", g, w, "min")$roc_local[348, ]
+# Subset for 8 cylinder TC-P engines
+  et <- subset(df, df[, 3] == 8 & df[, 8] == "TC-P")
+  
+# Parameters
+  x <- subset(et, select = 4)
+  y <- subset(et, select = 5 : 7)
+  d <- subset(et, select = 2)
+  w <- matrix(c(1, 0, 0), ncol = 3)
+
+# Calc local Roc
+  roc.hdf(x, y, d, 2015, "vrs", w, "min")
 }

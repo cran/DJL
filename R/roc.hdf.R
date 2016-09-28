@@ -1,6 +1,6 @@
-roc.sf <-
-function(xdata, ydata, date, t, rts = "crs", g = NULL,
-                   wd = NULL, sg = "ssm", ftype = "d", cv = "convex"){
+roc.hdf <-
+function(xdata, ydata, date, t, rts = "crs",
+                    wd = NULL, sg = "ssm", ftype = "d", cv = "convex"){
   
   # Initial checks
   if(t <= min(date))                                   stop('t is earlier than dataset.')
@@ -17,7 +17,6 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   n     <- nrow(xdata)
   m     <- ncol(xdata)
   s     <- ncol(ydata)
-  g     <- if(is.null(g)) cbind(xdata, ydata) else as.matrix(g)
   wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
   o     <- matrix(c(1:n), ncol = 1) # original data order
@@ -27,13 +26,11 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   x <- xdata[order(date),, drop = F]
   y <- ydata[order(date),, drop = F]
   d <- date [order(date),, drop = F]
-  g <- g    [order(date),, drop = F]
   o <- o    [order(date),, drop = F]
   
   # Data frames
   eff_r     <- array(NA, c(n,1))
   eff_t     <- array(NA, c(n,1))
-  eff_t_gm  <- array(NA, c(n,1)) # Geometric mean for equi-ratio
   lambda    <- array(NA, c(n,n))
   ed        <- array(NA, c(n,1))
   sl        <- array(NA, c(n,1))
@@ -43,14 +40,14 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   # Loop for eff_r and eff_t
   for(i in unique(d[1:r])){
     # Run
-    sf_r                  <- dm.sf(subset(x, d <= i), subset(y, d <= i), rts, subset(g, d <= i),
-                                   wd, 0, sg, subset(d, d <= i), cv, which(d == i))
-    eff_r[which(d == i),] <- sf_r$eff[which(d == i),]
+    hdf_r                 <- dm.hdf(subset(x, d <= i), subset(y, d <= i), rts,
+                                    wd, 0, sg, subset(d, d <= i), cv, which(d == i))
+    eff_r[which(d == i),] <- hdf_r$eff[which(d == i),]
     if(i == d[r]){
-      sf_t                <- dm.sf(subset(x, d <= i), subset(y, d <= i), rts, subset(g, d <= i),
-                                   wd, 0, sg, subset(d, d <= i), cv)
-      eff_t[1:r,]         <- sf_t$eff[1:r,]
-      lambda[1:r, 1:r]    <- sf_t$lambda[1:r, 1:r]
+      hdf_t               <- dm.hdf(subset(x, d <= i), subset(y, d <= i), rts,
+                                     wd, 0, sg, subset(d, d <= i), cv)
+      eff_t[1:r,]         <- hdf_t$eff[1:r,]
+      lambda[1:r, 1:r]    <- hdf_t$lambda[1:r, 1:r]
     } 
   }
   
@@ -58,10 +55,9 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   ed <- if(ftype == "s") rep(t, r) else lambda[, 1:r] %*% d[1:r,] / rowSums(lambda, na.rm=T)
   
   # RoC
-  id_roc           <- which(round(eff_r[, 1], 8) == 0 & round(eff_t[, 1], 8) != 0 & ed[, 1] > d[, 1])
-  eff_t_gm[id_roc] <- ((1 + eff_t[id_roc, 1]) / (1 - eff_t[id_roc, 1]))^0.5 # Geometric mean for equi-ratio
-  delta_t          <- 1/(ed - d)
-  roc[id_roc,]     <- eff_t_gm[id_roc,]^delta_t[id_roc,]
+  id_roc       <- which(round(eff_r[, 1], 8) == 1 & round(eff_t[, 1], 8) != 1 & ed[, 1] > d[, 1])
+  delta_t      <- 1/(ed - d)
+  roc[id_roc,] <- (1/eff_t[id_roc,])^delta_t[id_roc,]
   
   # RoC filter
   roc[roc[id_roc,] > 10,] <- NA

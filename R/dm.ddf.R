@@ -1,13 +1,14 @@
 dm.ddf <-
 function(xdata, ydata, rts = "crs", g = NULL, 
-                   wd = NULL, se = FALSE, sg = "ssm", date = NULL, cv = "convex"){
+                   wd = NULL, se = FALSE, sg = "ssm", date = NULL, cv = "convex", o = NULL){
 
   # Initial checks
   if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
   if(is.na(match(se,  c(0, 1, FALSE, TRUE))))          stop('se must be either 0(FALSE) or 1(TRUE).')
   if(is.na(match(sg,  c("ssm", "max", "min"))))        stop('sg must be "ssm", "max", or "min".')
   if(is.na(match(cv,  c("convex", "fdh"))))            stop('cv must be "convex" or "fdh".')
-  
+  if(!is.null(o) && !all(o <= nrow(xdata)))            stop('o must be element(s) of n.')
+
   # Load library
   # library(lpSolveAPI)
   
@@ -22,6 +23,7 @@ function(xdata, ydata, rts = "crs", g = NULL,
   wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
   se    <- ifelse(is.logical(se), ifelse(isTRUE(se), 1, 0), se)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
+  o     <- if(is.null(o)) c(1:n) else as.vector(o)
   
   # Data frames
   results.efficiency <- matrix(NA, nrow = n, ncol = 1)
@@ -33,7 +35,7 @@ function(xdata, ydata, rts = "crs", g = NULL,
   results.gamma      <- matrix(NA, nrow = n, ncol = s) 
   
   # LP
-  for (k in 1:n){   
+  for (k in o){   
     # Declare LP
     lp.ddf <- make.lp(0, n + n + m + s + m + s) # lambda+mu+beta+gamma+xslack+yslack
     
@@ -62,7 +64,8 @@ function(xdata, ydata, rts = "crs", g = NULL,
     # Output constraints
     for(r in 1:s){
       if(wd[1, r] == 1){
-        add.constraint(lp.ddf, c(ydata[, r], g[k, m + r]), indices = c(1:n, n + n + m + r), "=", ydata[k, r])
+        add.constraint(lp.ddf, c(ydata[, r], g[k, m + r]),
+                       indices = c(1:n, n + n + m + r), "=", ydata[k, r])
         add.constraint(lp.ddf, c(1), indices = c(n + n + m + s + m + r), "=", 0)
       }else{
         add.constraint(lp.ddf, c(ydata[, r], -g[k, m + r], -1), 
