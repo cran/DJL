@@ -1,4 +1,15 @@
 ===================================================================================
+DJL v2.7 (Release date: 2018-4-18)
+===================================================================================
+
+Code>
+1. roc.malmquist: new feature added
+
+Man>
+1. roc.malmquist: new feature added
+
+
+===================================================================================
 DJL v2.6 (Release date: 2016-09-27)
 ===================================================================================
 
@@ -6,8 +17,8 @@ Code>
 1. dm.ddf/dea/hdf/sbm/sf: argument 'o' added
 2. dm.hdf: consistency checking simplified using argument 'o'
 3. dm.ddf/sf: weak disposability bug fixed
-4. roc.dea/df: overall code simplied using argument 'o' with matrix operation
-5. map.soa.ddf/dea/sbm/sf: overall code simplied with matrix operation
+4. roc.dea/df: overall code simplified using argument 'o' with matrix operation
+5. map.soa.ddf/dea/sbm/sf: overall code simplified with matrix operation
 6. map.soa.hdf: new feature added
 7. roc.hdf: new feature added
 8. target.arrival.hdf: new feature added
@@ -19,6 +30,7 @@ Man>
 3. roc.hdf: new feature added
 4. target.arrival.hdf: new feature added
 5. target.spec.dea: argument 'bound' added
+
 
 ===================================================================================
 DJL v2.5 (Release date: 2016-08-18)

@@ -49,7 +49,7 @@ function(xdata, ydata, rts = "crs",
   }
   
   # Data modification for weak-disposability
-  if(!is.null(wd)){
+  if(sum(wd) > 0){
     x.o   <- unique(xdata)
     xdata <- rbind(xdata, x.o)
     ydata <- rbind(ydata, matrix(0, nrow(x.o), s, dimnames = list(NULL, names(ydata))))
