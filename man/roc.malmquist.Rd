@@ -22,7 +22,7 @@
     \code{"drs"  }{Decreasing RTS}
   }
   \item{orientation}{Orientation of the measurement \cr
-    \code{"n"  }{Non-orientation} \cr
+    \code{"n"  }{Non-orientation (default)} \cr
     \code{"i"  }{Input-orientation} \cr
     \code{"o"  }{Output-orientation}
   }

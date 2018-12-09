@@ -36,30 +36,32 @@ function(xdata, ydata, rts = "crs",
   if(se == 0){
     for(k in o){   
       # Declare LP
-      lp.sbm <- make.lp(0, (n + 1 + m + s)) # lambda+t+xslack+yslack
+      lp.sbm <- make.lp(0, (n + 1 + m + s)) # A+t+xSlack+ySlack
       
       # Set objective
-      if(orientation == "o") set.objfn(lp.sbm, c(-1, -1 / (s * ydata[k, ])),
-                                       indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)))
-      if(orientation != "o") set.objfn(lp.sbm,c(1, -1 / (m * xdata[k, ])), 
-                                       indices=c((n + 1):(n + 1 + m)))
+      if(orientation == "o"){
+        set.objfn(lp.sbm, c(-1, -1 / (s * ydata[k, ])),
+                  indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)))
+      }else{
+        set.objfn(lp.sbm,c(1, -1 / (m * xdata[k, ])), 
+                  indices=c((n + 1):(n + 1 + m)))
+      }
       
       # RTS
-      if(rts == "vrs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), "=", 1)
+      if(rts == "vrs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), "=", 0)
       if(rts == "crs") set.constr.type(lp.sbm, 0, 1)
-      if(rts == "irs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), ">=", 1)
-      if(rts == "drs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), "<=", 1)
+      if(rts == "irs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), ">=", 0)
+      if(rts == "drs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), "<=", 0)
+      
+      # Normalization for non-oriented / free for oriented
+      if(orientation == "n") add.constraint(lp.sbm, c(1, 1 / (s * ydata[k,])),
+                                            indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)), "=", 1)
       
       # Set type
       if(cv == "fdh") set.type(lp.sbm, 1:n, "binary")
       
-      # Let t be 1 to avoid clutters for non-CRS / oriented model
-      if(rts != "crs")       add.constraint(lp.sbm, c(1), indices = c(n + 1), "=", 1)
+      # Let t be 1 to avoid clutters for oriented model
       if(orientation != "n") add.constraint(lp.sbm, c(1), indices = c(n + 1), "=", 1)
-      
-      # Normalization constraint
-      if(orientation == "n") add.constraint(lp.sbm, c(1, 1 / (s * ydata[k,])),
-                                            indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)), "=", 1)
       
       # Input constraints
       for(i in 1:m){
@@ -72,12 +74,6 @@ function(xdata, ydata, rts = "crs",
         add.constraint(lp.sbm, c(ydata[, r], -ydata[k, r], -1),
                        indices = c(1:(n + 1), n + 1 + m + r), "=", 0)
       }
-      
-      # Oriented model - no slacks
-      if(orientation == "i") add.constraint(lp.sbm, rep(1, s), 
-                                            indices = c((n + 1 + m + 1):(n + 1 + m + s)), "=", 0)
-      if(orientation == "o") add.constraint(lp.sbm, rep(1, m),
-                                            indices = c((n + 1 + 1):(n + 1 + m)), "=", 0)
       
       # Bounds
       set.bounds(lp.sbm, lower = c(rep(0, n + 1 + m + s)))  
@@ -97,12 +93,15 @@ function(xdata, ydata, rts = "crs",
       # Stage II
       if(exists("sg")){
         # Link previous solutions
-        if(orientation == "o") add.constraint(lp.sbm, c(-1, -1 / (s * ydata[k,])),
-                                              indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)),
-                                              "=", results.efficiency[k])
-        if(orientation != "o") add.constraint(lp.sbm, c(1, -1 / (m * xdata[k, ])), 
-                                              indices = c((n + 1):(n + 1 + m)), 
-                                              "=", results.efficiency[k])
+        if(orientation == "o"){
+          add.constraint(lp.sbm, c(-1, -1 / (s * ydata[k,])),
+                         indices = c(n + 1, (n + 1 + m + 1):(n + 1 + m + s)),
+                         "=", results.efficiency[k])
+        }else{
+          add.constraint(lp.sbm, c(1, -1 / (m * xdata[k, ])), 
+                         indices = c((n + 1):(n + 1 + m)), 
+                         "=", results.efficiency[k])  
+        }
         
         # date sum
         if(sg == "max") set.objfn(lp.sbm, c(-date[1:n]), indices = c(1:n))
@@ -127,31 +126,31 @@ function(xdata, ydata, rts = "crs",
   if(se == 1){
     for(k in o){   
       # Declare LP
-      lp.sbm <- make.lp(0, (n + 1 + m + s)) # lambda+t+xb+yb / xtarget<-xb, ytarget<-yb
+      lp.sbm <- make.lp(0, (n + 1 + m + s)) # A+t+xb+yb / xtarget<-xb, ytarget<-yb
       
       # Set objective
-      if(orientation == "o") set.objfn(lp.sbm, c(-1 / (s * ydata[k,])),
-                                       indices = c((n + 1 + m + 1):(n + 1 + m + s)))
-      if(orientation != "o") set.objfn(lp.sbm, c(1 / (m * xdata[k,])),
-                                       indices = c((n + 2):(n + 1 + m)))
+      if(orientation == "o"){
+        set.objfn(lp.sbm, c(-1 / (s * ydata[k,])), indices = c((n + 1 + m + 1):(n + 1 + m + s)))
+      }else{
+        set.objfn(lp.sbm, c(1 / (m * xdata[k,])), indices = c((n + 2):(n + 1 + m)))  
+      }
       
       # RTS
-      if(rts == "vrs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), "=", 1)
+      if(rts == "vrs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), "=", 0)
       if(rts == "crs") set.constr.type(lp.sbm, 0, 1)
-      if(rts == "irs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), ">=", 1)
-      if(rts == "drs") add.constraint(lp.sbm, c(rep(1, n)), indices = c(1:n), "<=", 1)
+      if(rts == "irs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), ">=", 0)
+      if(rts == "drs") add.constraint(lp.sbm, c(rep(1, n), -1), indices = c(1:(n + 1)), "<=", 0)
       
       # Set type
       if(cv == "fdh") set.type(lp.sbm, 1:n, "binary")
       
-      # Let t be 1 to avoid clutters for non-CRS / oriented model
-      if(rts != "crs")       add.constraint(lp.sbm, c(1), indices = c(n + 1), "=", 1)
-      if(orientation != "n") add.constraint(lp.sbm, c(1), indices = c(n + 1), "=", 1)
-
       # Normalization constraint
       if(orientation == "n") add.constraint(lp.sbm, c(1 / (s * ydata[k,])),
                                             indices = c((n + 1 + m + 1):(n + 1 + m + s)), "=", 1)
       
+      # Let t be 1 to avoid clutters for non-oriented model
+      if(orientation != "n") add.constraint(lp.sbm, c(1), indices = c(n + 1), "=", 1)
+
       # Input constraints
       for(i in 1:m){
         add.constraint(lp.sbm, c(xdata[, i], -1),  indices = c(1:n, n + 1 + i), "<=", 0)
