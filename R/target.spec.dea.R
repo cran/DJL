@@ -1,31 +1,33 @@
 target.spec.dea <-
 function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
-                            alpha = NULL, beta = NULL, wv, rts = "crs", sg = "ssm",
+                            alpha = NULL, beta = NULL, wv = NULL, rts = "crs", sg = "ssm",
                             ftype = "d", ncv = NULL, env = NULL, cv = "convex", bound = TRUE){
   
   # Initial checks
-  if(is.null(date) & sg != "ssm")                      stop('sg must be "ssm" when date is NULL.')
-  if(is.null(date) | is.null(t) | is.null(dt))         mtype <- "sidea" else mtype <- "tidea"
-  if(mtype == "tidea") if(t <= min(date))              stop('t is earlier than dataset.')
-  if(mtype == "tidea") if(max(date) < t)               stop('t is later than dataset.')
-  if(dmu > nrow(xdata) | dmu < 1)                      stop('dmu must indicate one of data points in the set.')
-  if(!xor(is.null(alpha), is.null(beta)))              stop('Either alpha or beta must be defined.')
-  if(is.null(alpha) & !is.null(beta))                  orientation <- "i" else orientation <- "o"
-  if(orientation == "i" & length(wv) != ncol(xdata))   stop('wv must have the same number of column with xdata.')
-  if(orientation == "o" & length(wv) != ncol(ydata))   stop('wv must have the same number of column with ydata.')
-  if(is.na(match(rts, c("crs", "vrs", "irs", "drs")))) stop('rts must be "crs", "vrs", "irs", or "drs".')
-  if(is.na(match(sg, c("ssm", "max", "min"))))         stop('sg must be "ssm", "max", or "min".')
-  if(is.na(match(ftype, c("d", "s"))))                 stop('ftype must be either "d" or "s".')
-  if(is.na(match(cv, c("convex", "fdh"))))             stop('cv must be "convex" or "fdh".')
+  if(is.null(date) & sg != "ssm")                               stop('sg must be "ssm" when date is NULL.')
+  if(is.null(date) | is.null(t) | is.null(dt))                  mtype <- "sidea" else mtype <- "tidea"
+  if(mtype == "tidea") if(t <= min(date))                       stop('t is earlier than dataset.')
+  if(mtype == "tidea") if(max(date) < t)                        stop('t is later than dataset.')
+  if(dmu > nrow(xdata) | dmu < 1)                               stop('dmu must indicate one of data points in the set.')
+  if(!xor(is.null(alpha), is.null(beta)))                       stop('Either alpha or beta must be defined.')
+  if(is.null(alpha) & !is.null(beta))                           orientation <- "i" else orientation <- "o"
+  if(orientation == "i" & !(length(wv) %in% c(0, ncol(xdata)))) stop('wv must have the same length with input.')
+  if(orientation == "o" & !(length(wv) %in% c(0, ncol(ydata)))) stop('wv must have the same length with output.')
+  if(is.na(match(rts, c("crs", "vrs", "irs", "drs"))))          stop('rts must be "crs", "vrs", "irs", or "drs".')
+  if(is.na(match(sg, c("ssm", "max", "min"))))                  stop('sg must be "ssm", "max", or "min".')
+  if(is.na(match(ftype, c("d", "s"))))                          stop('ftype must be either "d" or "s".')
+  if(is.na(match(cv, c("convex", "fdh"))))                      stop('cv must be "convex" or "fdh".')
   
   # Parameters 1
-  xdata       <- as.matrix(xdata)
-  ydata       <- as.matrix(ydata)
-  date        <- if(mtype == "tidea") as.matrix(date)
-  env         <- if(!is.null(env)) as.matrix(env)
-  alpha       <- if(orientation == "i") matrix(NA, nrow = 1, ncol = ncol(xdata)) else as.matrix(alpha)
-  beta        <- if(orientation == "o") matrix(NA, nrow = 1, ncol = ncol(ydata)) else as.matrix(beta)
-
+  xdata <- as.matrix(xdata)
+  ydata <- as.matrix(ydata)
+  date  <- if(mtype == "tidea") as.matrix(date)
+  env   <- if(!is.null(env)) as.matrix(env)
+  alpha <- if(orientation == "i") matrix(NA, nrow = 1, ncol = ncol(xdata)) else as.matrix(alpha)
+  beta  <- if(orientation == "o") matrix(NA, nrow = 1, ncol = ncol(ydata)) else as.matrix(beta)
+  wv.i  <- if(is.null(wv)) as.vector(1 - xdata[dmu,]/sum(xdata[dmu,])) else as.vector(wv)
+  wv.o  <- if(is.null(wv)) as.vector(1 - ydata[dmu,]/sum(ydata[dmu,])) else as.vector(wv)
+  
   # PPS
   if(mtype == "tidea"){
     # RoC
@@ -91,8 +93,8 @@ function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
   lp.idea <- if(orientation == "i") make.lp(0, n + m + m + s) else make.lp(0, n + s + m + s)
 
   # Set objective
-  if(orientation == "i") set.objfn(lp.idea, c(wv),  indices = c((n + 1):(n + m)))
-  if(orientation == "o") set.objfn(lp.idea, c(-wv), indices = c((n + 1):(n + s)))
+  if(orientation == "i") set.objfn(lp.idea, c( wv.i), indices = c((n + 1):(n + m)))
+  if(orientation == "o") set.objfn(lp.idea, c(-wv.o), indices = c((n + 1):(n + s)))
   
   # RTS
   if(rts == "vrs") add.constraint (lp.idea, c(rep(1, n)), indices = c(1:n), "=", 1)

@@ -3,7 +3,7 @@
 \title{Spec target setting using DEA}
 \description{Employs \code{inverse DEA} to estimate specifications(in/out-puts) to achieve a predetermined efficiency.}
 \usage{target.spec.dea(xdata, ydata, date=NULL, t=NULL, dt=NULL, dmu, et="c",
-                alpha=NULL, beta=NULL, wv, rts="crs", sg="ssm", ftype="d",
+                alpha=NULL, beta=NULL, wv=NULL, rts="crs", sg="ssm", ftype="d",
                 ncv=NULL, env=NULL, cv="convex", bound=TRUE)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}

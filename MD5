@@ -1,6 +1,6 @@
-493f4781e2c0a35bfa1cd2be7852350a *DESCRIPTION
+8cb19c67af9b176036ee0e0753246e3d *DESCRIPTION
 736ff9013de0ec8ac82bdcd1122e04ea *NAMESPACE
-5f89b00b1be0e881b5000f3fe046698a *NEWS
+1aee5dfa77e493f9be8276e6c70172a2 *NEWS
 6ac54192fac67418c0f793d848a7a344 *R/dm.ddf.R
 d37bc0c288150bbe1d4a8b694d7ba79d *R/dm.dea.R
 09aac39ce47bef0fe121cbc4611ddba3 *R/dm.hdf.R
@@ -14,14 +14,14 @@ d97dff16894cc36adfca3643d22f5912 *R/map.soa.ddf.R
 f34bca18be03a5e230d03c8a7bec4e22 *R/map.soa.hdf.R
 df5831bc36fa0664f75533531e9e1b25 *R/map.soa.sbm.R
 681ac189bb19271ca4a5537f96c588f4 *R/map.soa.sf.R
-1c3562f6aac37f84bb267c085a5d559b *R/roc.dea.R
+6f404b6da504991f82fb1315acdfd832 *R/roc.dea.R
 e8e170cb1ebb47d4dc350cb5175f92de *R/roc.hdf.R
 410a2a59bb783e826f94604049372db1 *R/roc.malmquist.R
 b47f6b8e4480b896c44c5c4dc2b4ebab *R/roc.sf.R
 90c1231f7e012bdc3323a5e9d3667337 *R/target.arrival.dea.R
 92e59eaac236b59a5fcd20fb316c68ca *R/target.arrival.hdf.R
 d7f8844a4d1a2d551102631ccfd5e125 *R/target.arrival.sf.R
-7ee7d8a9f7fa947c3fdbcc59938a8922 *R/target.spec.dea.R
+eee61072cd19d3817d016055585b330d *R/target.spec.dea.R
 4d14a1d7091540f4407a51472a7862d7 *data/dataset.airplane.2017.rda
 8479923d108383ba8073e7aac678c612 *data/dataset.engine.2015.rda
 ce8ca481b796161e31e8a277a43f0793 *data/dataset.hev.2013.rda
@@ -48,4 +48,4 @@ cc1c042264b59cbe38316689726ff9b6 *man/roc.malmquist.Rd
 e28bac19890eff4e85242a3bd112869f *man/target.arrival.dea.Rd
 e2d0848c53c6fa27216e86307e81b978 *man/target.arrival.hdf.Rd
 447a1d7a3673c7ecbc68d74ceaace28b *man/target.arrival.sf.Rd
-e29d23ad0d28cc9a5fdfbb04f622c613 *man/target.spec.dea.Rd
+d9439b0bfe2ba78de0b3ff61b0af0748 *man/target.spec.dea.Rd

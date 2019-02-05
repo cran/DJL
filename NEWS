@@ -1,4 +1,16 @@
 ===================================================================================
+DJL v2.9 (Release date: 2019-02-06)
+===================================================================================
+
+Code>
+1. roc.dea: bug fixed for only one DMU presenting local RoC
+2. target.spec.dea: NULL as a default value for wv (scaling factor will be applied)
+
+Man>
+1. target.spec.dea: NULL as a default value for wv (scaling factor will be applied)
+
+
+===================================================================================
 DJL v2.8 (Release date: 2018-12-09)
 ===================================================================================
 
