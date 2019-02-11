@@ -1,6 +1,7 @@
-8cb19c67af9b176036ee0e0753246e3d *DESCRIPTION
+71dbd10ae7640ba16e1817c964f487d2 *DESCRIPTION
 736ff9013de0ec8ac82bdcd1122e04ea *NAMESPACE
-1aee5dfa77e493f9be8276e6c70172a2 *NEWS
+0a11d2a755118a58013100f5ec933c34 *NEWS
+284bd81d02549238a4150f0297c0796a *R/DJL-internal.R
 6ac54192fac67418c0f793d848a7a344 *R/dm.ddf.R
 d37bc0c288150bbe1d4a8b694d7ba79d *R/dm.dea.R
 09aac39ce47bef0fe121cbc4611ddba3 *R/dm.hdf.R
@@ -21,7 +22,7 @@ b47f6b8e4480b896c44c5c4dc2b4ebab *R/roc.sf.R
 90c1231f7e012bdc3323a5e9d3667337 *R/target.arrival.dea.R
 92e59eaac236b59a5fcd20fb316c68ca *R/target.arrival.hdf.R
 d7f8844a4d1a2d551102631ccfd5e125 *R/target.arrival.sf.R
-eee61072cd19d3817d016055585b330d *R/target.spec.dea.R
+75f1f5070d35513993af1fa2e1befa60 *R/target.spec.dea.R
 4d14a1d7091540f4407a51472a7862d7 *data/dataset.airplane.2017.rda
 8479923d108383ba8073e7aac678c612 *data/dataset.engine.2015.rda
 ce8ca481b796161e31e8a277a43f0793 *data/dataset.hev.2013.rda

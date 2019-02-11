@@ -32,7 +32,7 @@ function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
   if(mtype == "tidea"){
     # RoC
     roc_t <- roc.dea(xdata, ydata, date, t, rts, orientation, sg, ftype, ncv, env, cv)
-    et    <- if(et == "c") roc_t$eff_t[dmu,]
+    et    <- ifelse(et == "c", roc_t$eff_t[dmu,], et)
     
     # Reference set at t + dt
     id_soa        <- which(round(roc_t$eff_t, 8) == 1)
