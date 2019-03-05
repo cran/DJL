@@ -69,7 +69,7 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   
   # RoC segmentation
   id_local_roc             <- which(colSums(lambda, na.rm = T) > 0)
-  temp                     <- t(lambda[id_roc, id_local_roc]) %*% roc[id_roc] / colSums(lambda[id_roc, id_local_roc])
+  temp                     <- t(lambda[id_roc, id_local_roc, drop = F]) %*% roc[id_roc] / colSums(lambda[id_roc, id_local_roc, drop = F])
   temp[is.nan(temp),]      <- NA # For coding convenience, could be improved
   local_roc[id_local_roc,] <- temp
   
