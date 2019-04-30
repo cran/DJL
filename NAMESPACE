@@ -8,6 +8,7 @@ importFrom("stats", "complete.cases", "sd")
 importFrom("utils", "tail")
 export(dm.ddf,
        dm.dea,
+       dm.dynamic.bc,
        dm.hdf,
        dm.mahalanobis,
        dm.sbm,

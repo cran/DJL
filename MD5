@@ -1,9 +1,10 @@
-153038094aa2a254df2715dffb3a2151 *DESCRIPTION
-736ff9013de0ec8ac82bdcd1122e04ea *NAMESPACE
-eb9345dabd6fedb73e13c6eea2767556 *NEWS
-7385146693683562a071b85e0a21e888 *R/DJL-internal.R
+69670770f4af1566c4df6419ba30141e *DESCRIPTION
+0b75b482b6ba8041658b8bf3c2551a71 *NAMESPACE
+c656d826a56f94c40aa35eda5f8b5161 *NEWS
+ac9d5c0e4c1830f5de9d3694f492321f *R/DJL-internal.R
 6ac54192fac67418c0f793d848a7a344 *R/dm.ddf.R
 d37bc0c288150bbe1d4a8b694d7ba79d *R/dm.dea.R
+be073cbcfd95fb50f3b1087ef6345233 *R/dm.dynamic.bc.R
 09aac39ce47bef0fe121cbc4611ddba3 *R/dm.hdf.R
 10549cbacad7ae66bc794e6377a14d39 *R/dm.mahalanobis.R
 07f6076225d837ff6abad93b17e19491 *R/dm.sbm.R
@@ -31,6 +32,7 @@ e37396d37789d03b0b14ea4f081b3067 *man/dataset.engine.2015.Rd
 28fd1c2200ab7b3ddb4d894f973644d6 *man/dataset.hev.2013.Rd
 4f20d0c69528cc64d5c10dfa1d3c4b21 *man/dm.ddf.Rd
 e36325f4907d8d3f1f4852e5d5bf2914 *man/dm.dea.Rd
+b0a61ea66894d0db037e156af2a12111 *man/dm.dynamic.bc.Rd
 b0dd56d1511ebab0c1cb9baadbc95edf *man/dm.hdf.Rd
 e5950360c0af013ee5e08697a53384e8 *man/dm.mahalanobis.Rd
 6c15ab3ff3701d4b29b054c6ce7aab4f *man/dm.sbm.Rd
