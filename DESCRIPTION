@@ -1,8 +1,8 @@
 Package: DJL
 Type: Package
 Title: Distance Measure Based Judgment and Learning
-Version: 3.0
-Date: 2019-05-01
+Version: 3.1
+Date: 2019-11-17
 Author: Dong-Joon Lim, PhD
 Depends: R (>= 3.4.0), car, lpSolveAPI
 Maintainer: Dong-Joon Lim <tgno3.com@gmail.com>
@@ -11,6 +11,6 @@ Description: Implements various decision support tools related to the Econometri
 License: GPL-2
 LazyData: true
 NeedsCompilation: no
-Packaged: 2019-04-30 12:11:01 UTC; Dong-Joon Lim
+Packaged: 2019-11-16 16:49:36 UTC; Dong-Joon Lim
 Repository: CRAN
-Date/Publication: 2019-04-30 12:40:10 UTC
+Date/Publication: 2019-11-16 17:10:05 UTC

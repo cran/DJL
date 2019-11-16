@@ -53,7 +53,7 @@ function(xdata, ydata, date, t, rts = "crs", orientation,
   roc_local      <- roc_t$roc_local
   roc_avg        <- roc_t$roc_avg
   id_lroc        <- which(!is.na(roc_local))
-  roc_ind[id_f,] <- lambda[id_f, id_lroc] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc])
+  roc_ind[id_f,] <- lambda[id_f, id_lroc, drop = F] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc, drop = F])
     
   # Arrival target
   eff_temp             <- if(orientation == "i") eff_t else 1/eff_t # for coding convenience

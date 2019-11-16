@@ -50,7 +50,7 @@ function(xdata, ydata, date, t, rts = "crs",
   roc_local      <- hdf_roc$roc_local
   roc_avg        <- hdf_roc$roc_avg
   id_lroc        <- which(!is.na(roc_local))
-  roc_ind[id_f,] <- lambda[id_f, id_lroc] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc])
+  roc_ind[id_f,] <- lambda[id_f, id_lroc, drop = F] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc, drop = F])
 
   # Arrival target
   roc_avg              -> roc_ind[!is.na(roc_ind) & roc_ind == 0 | is.nan(roc_ind),]  # replace 0 or NaN with roc_avg

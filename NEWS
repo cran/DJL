@@ -1,4 +1,14 @@
 ===================================================================================
+DJL v3.1 (Release date: 2019-11-17)
+===================================================================================
+
+Code>
+1. target.arrival.dea: bug fixed for a single DMU on the frontier
+2. target.arrival.hdf: bug fixed for a single DMU on the frontier
+3. target.arrival.sf : bug fixed for a single DMU on the frontier
+
+
+===================================================================================
 DJL v3.0 (Release date: 2019-05-01)
 ===================================================================================
 

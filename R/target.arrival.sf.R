@@ -52,7 +52,7 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   roc_local      <- sf_roc$roc_local
   roc_avg        <- sf_roc$roc_avg
   id_lroc        <- which(!is.na(roc_local))
-  roc_ind[id_f,] <- lambda[id_f, id_lroc] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc])
+  roc_ind[id_f,] <- lambda[id_f, id_lroc, drop = F] %*% roc_local[id_lroc,] / rowSums(lambda[id_f, id_lroc, drop = F])
 
   # Arrival target
   eff_t_gm[id_f,]      <- ((1 - eff_t[id_f,]) / (1 + eff_t[id_f,]))^0.5 # Geometric mean for equi-ratio
