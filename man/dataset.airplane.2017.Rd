@@ -16,7 +16,7 @@
 \source{http://www.airbus.com/aircraftfamilies \cr http://www.boeing.com/commercial}
 \author{Dong-Joon Lim, PhD}
 \references{
-Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for new product scheduling: who are the competitors and how fast are they moving forward?. Advances in DEA Theory and Applications: with Examples in Forecasting Models. \emph{Wiley (forthcoming)}, 2016.
+Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for new product scheduling: who are the competitors and how fast are they moving forward?. \emph{Advances in DEA Theory and Applications: with Examples in Forecasting Models}. (2017): 443-458.
 }
 \examples{
 # Load dataset

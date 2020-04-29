@@ -1,4 +1,21 @@
 ===================================================================================
+DJL v3.3 (Release date: 2020-05-01)
+===================================================================================
+
+Code>
+1. roc.dea: a bug on unordered dataset fixed
+2. roc.hdf: a bug on unordered dataset fixed
+3. roc.sf : a bug on unordered dataset fixed
+4. plp    : a new function added
+
+Man>
+1. target.arrival.dea: a typo fixed
+2. target.arrival.hdf: a typo fixed
+3. target.arrival.sf : a typo fixed
+4. plp               : a new function added
+
+
+===================================================================================
 DJL v3.2 (Release date: 2019-12-24)
 ===================================================================================
 

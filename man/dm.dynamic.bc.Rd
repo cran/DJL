@@ -30,8 +30,7 @@
   \item{\code{$aslack}}{Budget(available) slack}
 }
 \references{
-Lim, D.-J., K.-W., Lee, & M.-S., Kim. (2019). "A revised dynamic DEA model with budget constraints" 
-\emph{(Forthcoming)} (TBA).
+Lim, D.-J., M.-S., Kim, & K.-W., Lee. (2020). "A revised dynamic DEA model with budget constraints." \emph{International Transactions in Operational Research (In press)}.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{

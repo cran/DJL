@@ -49,7 +49,7 @@ Lim, Dong-Joon, Timothy R. Anderson, and Oliver Lane Inman. "Choosing effective 
 
 Lim, Dong-Joon, et al. "Comparing technological advancement of hybrid electric vehicles (HEV) in different market segments." \emph{Technological Forecasting and Social Change} 97 (2015): 140~153.
 
-Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles (HEVs). Handbook of Operations Analytics Using Data Envelopment Analysis. \emph{Springer (forthcoming)}, 2016.
+Lim, Dong-Joon, and Dong-Hyuk Yang. "Assessment of Regulatory Requirements on Technological Changes: The Increasing Dominance of Downsized Turbo/Super-Charged Engines Over Naturally Aspirated Engines." \emph{IEEE Access} 7 (2019): 84839-84848.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{
@@ -89,5 +89,5 @@ Lim, Dong-Joon, et al. Technometrics Study Using DEA on Hybrid Electric Vehicles
              SOA = hev,
              LocalRoC = results$roc_local[hev, ])[order(c[hev, ]), ]
   # NOTE: the published results include a typo on roc_local[82,]
-  #       this will be corrected in forthcoming book chapter(Lim, D-J. et al., 2016).
+  #       this has been corrected in Lim, D-J. et al. (2016).
 }

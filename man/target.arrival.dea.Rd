@@ -34,7 +34,7 @@
     \code{"convex" }{Convexity holds (default)} \cr
     \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
-  \item{anc}{Implements stepwise RoC computation if \code{TRUE}}
+  \item{anc}{Implements a stepwise RoC computation if \code{TRUE}}
 }
 \value{
   \item{\code{$eff_t}}{Efficiency at \code{t}}
@@ -50,7 +50,7 @@
 \references{
 Lim, Dong-Joon, Timothy R. Anderson, and Oliver Lane Inman. "Choosing effective dates from multiple optima in Technology Forecasting using Data Envelopment Analysis (TFDEA)." \emph{Technological Forecasting and Social Change} 88 (2014): 91~97.
 
-Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for new product scheduling: who are the competitors and how fast are they moving forward?. Advances in DEA Theory and Applications: with Examples in Forecasting Models. \emph{Wiley (forthcoming)}, 2016.
+Lim, Dong-Joon, and Timothy R. Anderson. Time series benchmarking analysis for new product scheduling: who are the competitors and how fast are they moving forward?. \emph{Advances in DEA Theory and Applications: with Examples in Forecasting Models}. (2017): 443-458.
 }
 \author{Dong-Joon Lim, PhD}
 \seealso{

@@ -74,12 +74,12 @@ function(xdata, ydata, date, t, rts = "crs", orientation,
   local_roc[id_local_roc,] <- temp
 
   # Sort results back to original order
-  eff_r     <- eff_r[order(o),,     drop = F]
-  eff_t     <- eff_t[order(o),,     drop = F]
-  lambda    <- lambda[order(o),,    drop = F]
-  ed        <- ed[order(o),,        drop = F]
-  roc       <- roc[order(o),,       drop = F]
-  local_roc <- local_roc[order(o),, drop = F]
+  eff_r     <- eff_r[order(o),,           drop = F]
+  eff_t     <- eff_t[order(o),,           drop = F]
+  lambda    <- lambda[order(o), order(o), drop = F]
+  ed        <- ed[order(o),,              drop = F]
+  roc       <- roc[order(o),,             drop = F]
+  local_roc <- local_roc[order(o),,       drop = F]
   
   results <- list(eff_r = eff_r, eff_t = eff_t, lambda_t = lambda, eft_date = ed,
                   roc_past = roc, roc_local = local_roc, roc_avg = avgroc)
