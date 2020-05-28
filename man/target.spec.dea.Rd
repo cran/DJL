@@ -4,7 +4,7 @@
 \description{Employs \code{inverse DEA} to estimate specifications(in/out-puts) to achieve a predetermined efficiency.}
 \usage{target.spec.dea(xdata, ydata, date=NULL, t=NULL, dt=NULL, dmu, et="c",
                 alpha=NULL, beta=NULL, wv=NULL, rts="crs", sg="ssm", ftype="d",
-                ncv=NULL, env=NULL, cv="convex", bound=TRUE)}
+                ncv=NULL, env=NULL, cv="convex", bound=TRUE, pin=TRUE)}
 \arguments{
   \item{xdata}{Input(s) vector (\emph{n} by \emph{m})}
   \item{ydata}{Output(s) vector (\emph{n} by \emph{s})}
@@ -38,6 +38,7 @@
     \code{"fdh"    }{Free disposal hull (this will override \code{rts})}
   }
   \item{bound}{Puts upper/lower bounds on alpha/beta if \code{TRUE}(default)}
+  \item{pin}{Includes the perturbed DMU in the PPS if \code{TRUE}(default)}
 }
 \value{
   \item{\code{$alpha}}{Estimated input(s)}

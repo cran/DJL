@@ -1,14 +1,14 @@
 target.spec.dea <-
 function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
                             alpha = NULL, beta = NULL, wv = NULL, rts = "crs", sg = "ssm",
-                            ftype = "d", ncv = NULL, env = NULL, cv = "convex", bound = TRUE){
+                            ftype = "d", ncv = NULL, env = NULL, cv = "convex", bound = TRUE, pin = TRUE){
   
   # Initial checks
   if(is.null(date) & sg != "ssm")                               stop('sg must be "ssm" when date is NULL.')
   if(is.null(date) | is.null(t) | is.null(dt))                  mtype <- "sidea" else mtype <- "tidea"
   if(mtype == "tidea") if(t <= min(date))                       stop('t is earlier than dataset.')
   if(mtype == "tidea") if(max(date) < t)                        stop('t is later than dataset.')
-  if(dmu > nrow(xdata) | dmu < 1)                               stop('dmu must indicate one of data points in the set.')
+  if(dmu > nrow(as.matrix(xdata)) | dmu < 1)                    stop('dmu must indicate one of data points in the set.')
   if(!xor(is.null(alpha), is.null(beta)))                       stop('Either alpha or beta must be defined.')
   if(is.null(alpha) & !is.null(beta))                           orientation <- "i" else orientation <- "o"
   if(orientation == "i" & !(length(wv) %in% c(0, ncol(xdata)))) stop('wv must have the same length with input.')
@@ -23,10 +23,10 @@ function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
   ydata <- as.matrix(ydata)
   date  <- if(mtype == "tidea") as.matrix(date)
   env   <- if(!is.null(env)) as.matrix(env)
-  alpha <- if(orientation == "i") matrix(NA, nrow = 1, ncol = ncol(xdata)) else as.matrix(alpha)
-  beta  <- if(orientation == "o") matrix(NA, nrow = 1, ncol = ncol(ydata)) else as.matrix(beta)
-  wv.i  <- if(is.null(wv)) as.vector(1 - xdata[dmu,]/sum(xdata[dmu,])) else as.vector(wv)
-  wv.o  <- if(is.null(wv)) as.vector(1 - ydata[dmu,]/sum(ydata[dmu,])) else as.vector(wv)
+  alpha <- if(orientation == "i") matrix(NA, nrow = 1, ncol = ncol(xdata)) else matrix(alpha, 1)
+  beta  <- if(orientation == "o") matrix(NA, nrow = 1, ncol = ncol(ydata)) else matrix(beta,  1)
+  wv.i  <- if(is.null(wv)){if(length(alpha) == 1) 1 else as.vector(1 - xdata[dmu,]/sum(xdata[dmu,]))}else{as.vector(wv)}
+  wv.o  <- if(is.null(wv)){if(length(beta ) == 1) 1 else as.vector(1 - ydata[dmu,]/sum(ydata[dmu,]))}else{as.vector(wv)}
   
   # PPS
   if(mtype == "tidea"){
@@ -68,20 +68,22 @@ function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
   ncv <- if(is.null(ncv)) matrix(0, ncol = m + s) else as.matrix(ncv)
 
   # Feasibility check
-  if(orientation == "i"){
-    x_l <- rbind(x_e[-n,, drop = F], xdata[dmu,] * et)
-    y_l <- rbind(y_e[-n,, drop = F], ydata[dmu,])
-    fb  <- ydata[dmu,] * (dm.dea(x_l, y_l, rts, "o", ncv = ncv, env = env_e, cv=cv, o = n)$eff[n])
-    if(sum(beta > fb) > 0) stop(paste0('Beta(', paste(beta, collapse = ", "),
-                                       ') is greater than feasible bound(',
-                                       paste(round(fb, 4), collapse = ", "), ').'))
-  }else{
-    x_l <- rbind(x_e[-n,, drop = F], xdata[dmu,])
-    y_l <- rbind(y_e[-n,, drop = F], ydata[dmu,] * et)
-    fb  <- xdata[dmu,] * (dm.dea(x_l, y_l, rts, "i", ncv = ncv, env = env_e, cv = cv, o = n)$eff[n])
-    if(sum(alpha < fb) > 0) stop(paste0('Alpha(', paste(alpha, collapse = ", "),
-                                        ') is smaller than feasible bound(',
-                                        paste(round(fb, 4), collapse = ", "), ').'))
+  if(isTRUE(bound)){
+    if(orientation == "i"){
+      x_l <- rbind(x_e[-n,, drop = F], xdata[dmu,] * et)
+      y_l <- rbind(y_e[-n,, drop = F], ydata[dmu,])
+      fb  <- ydata[dmu,] * (dm.dea(x_l, y_l, rts, "o", ncv = ncv, env = env_e, cv = cv, o = n)$eff[n])
+      if(sum(beta > fb) > 0) stop(paste0('Beta(', paste(beta, collapse = ", "),
+                                         ') is greater than feasible bound(',
+                                         paste(round(fb, 4), collapse = ", "), ').'))
+    }else{
+      x_l <- rbind(x_e[-n,, drop = F], xdata[dmu,])
+      y_l <- rbind(y_e[-n,, drop = F], ydata[dmu,] * et)
+      fb  <- xdata[dmu,] * (dm.dea(x_l, y_l, rts, "i", ncv = ncv, env = env_e, cv = cv, o = n)$eff[n])
+      if(sum(alpha < fb) > 0) stop(paste0('Alpha(', paste(alpha, collapse = ", "),
+                                          ') is smaller than feasible bound(',
+                                          paste(round(fb, 4), collapse = ", "), ').'))
+    } 
   }
   
   # Data frames
@@ -124,6 +126,11 @@ function(xdata, ydata, date = NULL, t = NULL, dt = NULL, dmu, et = "c",
         add.constraint(lp.idea, c(1), indices = c(j), "=", 0)
       }
     }
+  }
+  
+  # Prevent perturbed DMU from being efficient
+  if(!isTRUE(pin)){
+    add.constraint(lp.idea, 1, indices = n, "=", 0)
   }
   
   # Bounds
