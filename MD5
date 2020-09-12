@@ -1,6 +1,6 @@
-592839360d7258ee3c88a9110cfdaeb7 *DESCRIPTION
+70a3c163bf87ce9132d92075bd309b66 *DESCRIPTION
 182c6452c121b58b008e3fda3e3b5dc2 *NAMESPACE
-b7fa139f601c7ae3b413fe698b5fde9e *NEWS
+86d281468ab526097b5fbdd138af463b *NEWS
 6ac54192fac67418c0f793d848a7a344 *R/dm.ddf.R
 d37bc0c288150bbe1d4a8b694d7ba79d *R/dm.dea.R
 be073cbcfd95fb50f3b1087ef6345233 *R/dm.dynamic.bc.R
@@ -18,7 +18,7 @@ df5831bc36fa0664f75533531e9e1b25 *R/map.soa.sbm.R
 0d091b270d71afafb09970cb6b17d5b6 *R/plp.R
 c0a8edc9c2f4c6b88a6359a7b4fd8499 *R/roc.dea.R
 dc8eca2c261276e3e75eb8cda3662201 *R/roc.hdf.R
-410a2a59bb783e826f94604049372db1 *R/roc.malmquist.R
+eda771bd64fd2445f1798a4928f67265 *R/roc.malmquist.R
 e07665779a836bf73033ea746e346f8a *R/roc.sf.R
 05f3d393dd7d143ae2e59db5f964d262 *R/target.arrival.dea.R
 b8716bd1208a0f1e9e09845ef3b769d3 *R/target.arrival.hdf.R
