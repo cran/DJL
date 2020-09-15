@@ -15,6 +15,7 @@ function(xdata, ydata, date, rts = "crs",
   n     <- nrow(xdata)
   m     <- ncol(xdata)
   s     <- ncol(ydata)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else matrix(wd, 1)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
   o     <- matrix(c(1:n), ncol = 1) # original data order
   ud    <- sort(unique(date))

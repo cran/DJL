@@ -18,7 +18,7 @@ function(xdata, ydata, date, t, rts = "crs", g = NULL,
   n     <- nrow(xdata)
   m     <- ncol(xdata)
   s     <- ncol(ydata)
-  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else matrix(wd, 1)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
   r     <- tail(which(sort(date) <= t), 1)
   id_f  <- which(date > t)

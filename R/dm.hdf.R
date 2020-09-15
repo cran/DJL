@@ -19,7 +19,7 @@ function(xdata, ydata, rts = "crs",
   n     <- nrow(xdata)
   m     <- ncol(xdata)
   s     <- ncol(ydata)
-  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else matrix(wd, 1)
   se    <- ifelse(is.logical(se), ifelse(isTRUE(se), 1, 0), se)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
   o     <- if(is.null(o)) c(1:n) else as.vector(o)

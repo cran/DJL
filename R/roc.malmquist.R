@@ -22,7 +22,7 @@ function(xdata, ydata, tm = NULL, dm = "dea", rts = "crs", orientation = "n", g 
   n     <- dim(xdata)[1]
   m     <- dim(xdata)[2]
   s     <- dim(ydata)[2]
-  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else as.matrix(wd)
+  wd    <- if(is.null(wd)) matrix(c(0), ncol = s) else matrix(wd, 1)
   rts   <- ifelse(cv == "fdh", "vrs", rts)
   t     <- ifelse(is.null(tm), dim(xdata)[length(dim(xdata))], length(tm))
   tm    <- if(is.null(tm)) paste0("t", 1:t) else as.vector(tm)
@@ -67,6 +67,14 @@ function(xdata, ydata, tm = NULL, dm = "dea", rts = "crs", orientation = "n", g 
     
     # Tick mark
     temp.tm <- rep(paste0(tm[i], "-", tm[i + 1]), n)    
+    
+    # Transform zero-eff into one-eff
+    if(dm %in% c("ddf", "sf")){
+      m.0.0 <- m.0.0 + 1
+      m.1.1 <- m.1.1 + 1
+      m.0.1 <- m.0.1 + 1
+      m.1.0 <- m.1.0 + 1
+    }
     
     # Catching-Up (CU aka TEC) Index
     temp.cu <- m.1.1 / m.0.0
