@@ -15,7 +15,7 @@ function(xdata, ydata, zdata, bdata, rts = "crs", orientation = "i", wv = NULL){
   xdata <- if(length(dim(xdata)) != 3) array(xdata, c(dim(xdata)[1], 1, dim(xdata)[2])) else as.array(xdata)
   ydata <- if(length(dim(ydata)) != 3) array(ydata, c(dim(ydata)[1], 1, dim(ydata)[2])) else as.array(ydata)
   zdata <- if(length(dim(zdata)) != 3) array(zdata, c(dim(zdata)[1], 1, dim(zdata)[2])) else as.array(zdata)
-  bdata <- if(length(dim(bdata)) != 2) array(bdata, c(length(bdata), 1))                else as.array(bdata)
+  bdata <- if(length(dim(bdata)) != 2) array(bdata, c(length(bdata), 1))                else as.array(as.matrix(bdata))
   n     <- dim(xdata)[1]
   m     <- dim(xdata)[2]
   s     <- dim(ydata)[2]

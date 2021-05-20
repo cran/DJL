@@ -17,7 +17,7 @@
     \code{"i"  }{Input-orientation} \cr
     \code{"o"  }{Output-orientation}
   }
-  \item{se}{Implements \emph{Anderson & Peterson}'s super-efficiency model if \code{TRUE}}
+  \item{se}{Implements \emph{Andersen & Petersen}'s super-efficiency model if \code{TRUE}}
   \item{sg}{Employs second-stage optimization \cr
     \code{"ssm"  }{Slack-sum maximization (default)} \cr
     \code{"max"  }{Date-sum maximization (only if \code{date} is defined)} \cr
