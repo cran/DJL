@@ -1,12 +1,12 @@
-9f3b6016441f392e515cc2e212a5a670 *DESCRIPTION
+60ee6516060cbcf44327ff3ca686b147 *DESCRIPTION
 cea1c67a2826fc8f8d46e5df834ad3bd *NAMESPACE
-a70daa9b761e75147180a33e2f6d9815 *NEWS
+2722a36afde6d02c7d6254b93ab89016 *NEWS
 a2b92038193e7093272472888a6e130a *R/dm.ddf.R
 d37bc0c288150bbe1d4a8b694d7ba79d *R/dm.dea.R
 aa8eea309c382c87d67dd8d21ef2e14a *R/dm.dynamic.bc.R
 a84db7ed06c04ecfbce350a5885e6f4c *R/dm.hdf.R
 10549cbacad7ae66bc794e6377a14d39 *R/dm.mahalanobis.R
-c4d1ada48cfd69806f4c8a232a316002 *R/dm.network.dea.R
+7abdf8dcfc04b155e43179719724521c *R/dm.network.dea.R
 07f6076225d837ff6abad93b17e19491 *R/dm.sbm.R
 18b5eeee62e7239c69ec7b8d482e5b59 *R/dm.sf.R
 8e3753f2fb8353aa36cc55dfd7c7abc3 *R/ma.aps.reg.R
